@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 153
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Utils.framework/Headers
+END
+BMKFavPoiManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 172
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Utils.framework/Headers/BMKFavPoiManager.h
+END
+BMKNavigation.h
+K 25
+svn:wc:ra_dav:version-url
+V 169
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Utils.framework/Headers/BMKNavigation.h
+END
+BMKFavPoiInfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 169
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Utils.framework/Headers/BMKFavPoiInfo.h
+END
+BMKOpenPanorama.h
+K 25
+svn:wc:ra_dav:version-url
+V 171
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Utils.framework/Headers/BMKOpenPanorama.h
+END
+BMKOpenRoute.h
+K 25
+svn:wc:ra_dav:version-url
+V 168
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Utils.framework/Headers/BMKOpenRoute.h
+END
+BMKOpenPoiOption.h
+K 25
+svn:wc:ra_dav:version-url
+V 172
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Utils.framework/Headers/BMKOpenPoiOption.h
+END
+BMKUtilsComponent.h
+K 25
+svn:wc:ra_dav:version-url
+V 173
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Utils.framework/Headers/BMKUtilsComponent.h
+END
+BMKUtilsVersion.h
+K 25
+svn:wc:ra_dav:version-url
+V 171
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Utils.framework/Headers/BMKUtilsVersion.h
+END
+BMKOpenPoi.h
+K 25
+svn:wc:ra_dav:version-url
+V 166
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Utils.framework/Headers/BMKOpenPoi.h
+END
+BMKOpenRouteOption.h
+K 25
+svn:wc:ra_dav:version-url
+V 174
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Utils.framework/Headers/BMKOpenRouteOption.h
+END
+BMKOpenOption.h
+K 25
+svn:wc:ra_dav:version-url
+V 169
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Utils.framework/Headers/BMKOpenOption.h
+END
+BMKGeometry.h
+K 25
+svn:wc:ra_dav:version-url
+V 167
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Utils.framework/Headers/BMKGeometry.h
+END

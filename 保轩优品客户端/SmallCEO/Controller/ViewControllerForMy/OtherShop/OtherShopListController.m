@@ -1,0 +1,498 @@
+//
+//  OtherShopListController.m
+//  SmallCEO
+//
+//  Created by ni on 17/3/21.
+//  Copyright © 2017年 lemuji. All rights reserved.
+//
+
+#import "OtherShopListController.h"
+#import "OtherTableViewCell.h"
+#import "UpOrDownButton.h"
+#import "TabSelectView.h"
+#import "OtherDetailController.h"
+
+#import "OtherSearchViewController.h"
+
+@interface OtherShopListController ()<UITableViewDelegate,UITableViewDataSource,TabSelectViewDelegate> {
+    UIView              *choseView;
+    TabSelectView       *tabBlackView;
+    TabSelectView       *tabView;
+    long                seletedIndex;
+    UIView              *shadowView;
+    UIView              *allGoodsChoseView;
+    
+    BOOL                isOut;
+    NSArray             *cateTypeArr;
+    NSInteger           curMainCateIndex;
+    BOOL                isGetCateTypeArr;
+    NSString            *act;
+    NSString            *order;
+    NSString            *cid;
+    
+    NSString *_screenStr;
+    NSInteger _index;
+}
+@property (nonatomic,strong) UITableView *tableview;
+@property (nonatomic,assign)int curP;
+@property (nonatomic, strong) NSString *searchCid;
+@property (nonatomic, strong) NSMutableArray *allDataArray;
+@property (nonatomic, strong) NSMutableArray *dataArray;
+@property (nonatomic, assign) NSInteger curTabIndex;
+@property (nonatomic, strong) MJRefreshHeaderView *header;
+@property (nonatomic, strong) MJRefreshFooterView *footer;
+@property (nonatomic, strong) NSMutableArray *imageArray;
+@property (nonatomic, assign) BOOL isSales;
+@property (nonatomic, assign) BOOL isQuanbu;
+@end
+
+@implementation OtherShopListController
+- (void)dealloc {
+    [_header free];
+    [_footer free];
+}
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.isSales = NO;
+    self.isQuanbu = YES;
+    //初始化数据
+    self.curP = 1;
+    cid =@"1";
+    seletedIndex = 0;
+    curMainCateIndex=0;
+    _index = 0;
+    isOut = NO;
+    self.allDataArray = [NSMutableArray array];
+    self.dataArray = [NSMutableArray array];
+    self.imageArray = [NSMutableArray array];
+
+    [self createNavigationView];
+    [self createView];
+    [self getDataforSec];
+}
+- (void)creatBackView {
+    if (self.imageArray.count>0) {
+        return;
+    }
+    for (int i = 0; i < 1;i++ ) {
+        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(UI_SCREEN_WIDTH/2-53, UI_SCREEN_HEIGHT/4-50, 106, 106)];
+        imageView.hidden = NO;
+        imageView.image = [UIImage imageNamed:@"pho-zanwushuju@2x"];
+        UITableView *currentTableView;
+        currentTableView = self.tableview;
+        [currentTableView addSubview:imageView];
+        [_imageArray addObject:imageView];
+    }
+}
+
+- (void)createNavigationView {
+        UIButton *rightButton = [[UIButton alloc]initWithFrame:CGRectMake(0,0,30,30)];
+        [rightButton setImageEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
+            [rightButton setImage:[[UIImage imageNamed:@"home_search_black.png"] imageWithColor:[UIColor whiteColor]] forState:UIControlStateNormal];
+        [rightButton setImage:[UIImage imageNamed:@"icon-sousuo@2x"] forState:UIControlStateNormal];
+        [rightButton addTarget:self action:@selector(rightBtnClick) forControlEvents:UIControlEventTouchUpInside];
+        UIBarButtonItem *rightItem = [[UIBarButtonItem alloc]initWithCustomView:rightButton];
+        self.navigationItem.rightBarButtonItem= rightItem;
+}
+
+- (void)rightBtnClick {
+    OtherSearchViewController *vc = [[OtherSearchViewController alloc] init];
+    vc.cid = cid;
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+- (void)createView {
+    self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
+    self.tableview = [[UITableView alloc]initWithFrame:CGRectMake(0, 42, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT-64-42) style:UITableViewStylePlain];
+    _tableview.delegate = self;
+    _tableview.dataSource = self;
+    _tableview.tableFooterView = [[UIView alloc]initWithFrame:CGRectZero];
+    [self.view addSubview:_tableview];
+    [_tableview registerClass:[OtherTableViewCell class] forCellReuseIdentifier:@"OtherTableViewCell"];
+    _header = [[MJRefreshHeaderView alloc]init];
+    _header.scrollView = _tableview;
+    __weak OtherShopListController *vc = self;
+    _header.beginRefreshingBlock = ^(MJRefreshBaseView *view){
+        vc.curP = 1;
+        [vc getDataForList];
+    };
+    _footer = [[MJRefreshFooterView alloc]init];
+    _footer.scrollView = _tableview;
+    _footer.beginRefreshingBlock = ^(MJRefreshBaseView *view){
+        vc.curP++;
+        [vc getDataForList];
+    };
+}
+#pragma mark - 创建筛选按钮视图
+- (void)createChoseView {
+    if (!choseView) {
+        /*选项卡*/
+        choseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, 42)];
+        choseView.backgroundColor = WHITE_COLOR_3;
+        [self.view addSubview:choseView];
+        
+        NSArray *btnNames = @[@"全部店铺",@"会员价",@"参考利润"];
+        BOOL isVip = [[PreferenceManager sharedManager] preferenceForKey:@"isvip"];
+        if (!isVip) {
+            btnNames = @[@"全部店铺",@"销量优先",@"距离最近"];
+        }
+        CGFloat btnW = UI_SCREEN_WIDTH/3.0-2;
+        for (int i = 0; i < 2; i ++) {
+            UILabel *line = [[UILabel alloc] initWithFrame:CGRectMake(0, 41.5*i, UI_SCREEN_WIDTH, 0.5)];
+            line.backgroundColor = LINE_COLOR;
+            [choseView addSubview:line];
+            
+            UILabel *line2 = [[UILabel alloc] initWithFrame:CGRectMake(btnW+(btnW+1)*i, 0, 1, 41)];
+            line2.backgroundColor = LINE_COLOR;
+            [choseView addSubview:line2];
+        }
+        
+        for (int i = 0; i < 3; i ++) {
+            UpOrDownButton  *choseBtn = [[UpOrDownButton alloc]  init];
+            choseBtn.frame = CGRectMake(i*(btnW+1), 0.5, btnW, 41);
+            choseBtn.titleLab.text = btnNames[i];
+            if (i == 0) {
+                choseBtn.rightView.image = [UIImage imageNamed:@"down"];
+            }else {
+                choseBtn.titleLab.frame = CGRectMake(0, 10, UI_SCREEN_WIDTH/3.0, 20);
+            }
+            
+            choseBtn.backgroundColor = WHITE_COLOR_3;
+            choseBtn.titleLabel.font = [UIFont systemFontOfSize:16];
+            choseBtn.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
+            [choseView addSubview:choseBtn];
+            choseBtn.tag = 10086+i;
+            [choseBtn addTarget:self action:@selector(choseBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        }
+    }
+}
+
+- (void)createClassView {
+    for (UIView *view in shadowView.subviews) {
+        [view removeFromSuperview];
+    }
+    for (UIView *view in allGoodsChoseView.subviews) {
+        [view removeFromSuperview];
+    }
+    for (UIView *view in tabView.subviews) {
+        [view removeFromSuperview];
+    }
+
+    [shadowView removeFromSuperview];
+    [allGoodsChoseView removeFromSuperview];
+    [tabBlackView removeFromSuperview];
+    [tabView removeFromSuperview];
+    
+    /*展开的选项卡的背景*/
+    shadowView = [[UIView alloc] initWithFrame:CGRectMake(0, -(UI_SCREEN_HEIGHT-42)-200, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT-42)];
+    shadowView.backgroundColor = [UIColor blackColor];
+    shadowView.alpha = 0.7;
+    [self.view addSubview:shadowView];
+    [shadowView addTarget:self action:@selector(hideChoseView) forControlEvents:UIControlEventTouchUpInside];
+    
+    CGFloat allH = UI_SCREEN_HEIGHT-64-choseView.maxY;
+    NSArray *children = _allDataArray;
+    CGFloat counH = children.count *42.0;
+    if (counH<=allH) {
+        allH = counH;
+    }
+    
+    allGoodsChoseView = [[UIView alloc] initWithFrame:CGRectMake(0, -allH, UI_SCREEN_WIDTH, allH)];
+    allGoodsChoseView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:allGoodsChoseView];
+    
+    
+    /*二级分类*/
+    tabBlackView=[[TabSelectView alloc] initWithFrame:CGRectMake(UI_SCREEN_WIDTH/2.0f, 0, UI_SCREEN_WIDTH/2.0f, allH) isBlack:YES kinds:0];
+    tabBlackView.delegate=self;
+    [allGoodsChoseView addSubview:tabBlackView];
+    tabBlackView.hidden=NO;
+    
+    /*一级分类*/
+    tabView=[[TabSelectView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, allH) isBlack:NO kinds:0];
+    tabView.delegate=self;
+    [allGoodsChoseView addSubview:tabView];
+    [tabView updateWithArr:self.allDataArray];
+}
+
+- (void)typefaceColour:(UpOrDownButton *)sender {
+    for (int i = 1; i < 3; i++) {
+        UpOrDownButton *button = [choseView viewWithTag:10086 + i];
+        button.titleLab.textColor = [UIColor colorFromHexCode:@"373737"];
+        button.titleLab.font = [UIFont systemFontOfSize:14];
+    }
+    sender.titleLab.textColor = Pitchup_Color;
+    sender.titleLab.font = [UIFont boldSystemFontOfSize:14];
+}
+#pragma mark - 筛选事件
+- (void)choseBtnClick:(UpOrDownButton *)sender {
+    
+    //CGFloat allH = 165.0f;
+    if (sender.tag != 10086) {
+        [self typefaceColour:sender];
+        if (sender.tag == 10087) {
+            self.curP=1;
+            self.isSales = YES;
+            [self getDataForList];
+        }else {
+            self.curP=1;
+            self.isQuanbu = NO;
+            self.isSales = NO;
+            [self getDataForList];
+        }
+        return;
+    }else {
+        sender.titleLab.textColor = Pitchup_Color;
+        sender.titleLab.font = [UIFont boldSystemFontOfSize:14];
+    }
+    CGFloat allH = UI_SCREEN_HEIGHT-choseView.maxY-64;
+    NSArray *children = _allDataArray;
+    CGFloat counH = children.count *42.0;
+    if (counH<=allH) {
+        allH = counH;
+    }
+    CGFloat choseViewHight = 42;
+    if (seletedIndex != 0) {
+        UpOrDownButton *oldBtn = (UpOrDownButton *)[choseView viewWithTag:seletedIndex];
+        oldBtn.rightView.image = [UIImage imageNamed:@"down.png"];
+    }
+    if (isOut == YES)
+    {
+        if ( seletedIndex == sender.tag) {
+            if (sender.tag == 10086) {
+                allGoodsChoseView.frame = CGRectMake(0, -allH, UI_SCREEN_WIDTH, allH);
+                
+            }
+            sender.rightView.image = [UIImage imageNamed:@"down.png"];
+            
+            shadowView.frame = CGRectMake(0, -(UI_SCREEN_HEIGHT-choseViewHight), UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT-choseViewHight);
+            
+            isOut = NO;
+        }else {
+            if (sender.tag == 10086) {
+                allGoodsChoseView.frame = CGRectMake(0, choseViewHight, UI_SCREEN_WIDTH, allH);
+            }else if (sender.tag == 10088) {
+                allGoodsChoseView.frame = CGRectMake(0, -allH, UI_SCREEN_WIDTH, allH);
+            }else {
+                allGoodsChoseView.frame = CGRectMake(0, -allH, UI_SCREEN_WIDTH, allH);
+            }
+            sender.rightView.image = [UIImage imageNamed:@"home_up.png"];
+        }
+    }
+    else if (isOut == NO)
+    {
+        if (sender.tag == 10086) {
+            allGoodsChoseView.frame = CGRectMake(0, choseViewHight, UI_SCREEN_WIDTH, allH);
+        }
+        sender.rightView.image = [UIImage imageNamed:@"home_up.png"];
+        shadowView.frame = CGRectMake(0, choseViewHight, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT-choseViewHight);
+        isOut = YES;
+    }
+    seletedIndex = sender.tag;
+}
+
+- (void)hideChoseView {
+    UpOrDownButton *oldBtn = (UpOrDownButton *)[choseView viewWithTag:10086];
+    [self choseBtnClick:oldBtn];
+}
+//底部tab选择点击
+-(void)tabView:(TabSelectView *)view clickAtIndex:(NSInteger)index{
+    if (_index != index) {
+        _index = index;
+        _screenStr = self.allDataArray[index][@"cat_name"];
+        cid = self.allDataArray[index][@"cid"];
+        self.curP = 1;
+        [self hideChoseView];
+        [self getDataForList];
+    }
+}
+
+- (void)upDataTitle {
+  UpOrDownButton  *choseBtn = [choseView viewWithTag:10086];
+    if ([_screenStr isEqualToString:@"所有"] ) {
+        choseBtn.titleLab.text = @"全部店铺";
+    }else {
+        if (_screenStr.length > 0) {
+            choseBtn.titleLab.text = _screenStr;
+        }else {
+            choseBtn.titleLab.text = @"全部店铺";
+        }
+    }
+}
+
+//取消键盘
+-(void)missKeyBoard{
+    [self.view endEditing:YES];
+}
+
+#pragma mark - tabelviewdelegate
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.dataArray.count;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 130 / 667.0 * UI_SCREEN_HEIGHT;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString* adrList = @"OtherTableViewCell";
+    OtherTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:adrList];
+    if(cell == nil)
+    {
+        cell = [[OtherTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:adrList];
+        cell.selectionStyle =UITableViewCellSelectionStyleNone;
+    }
+    [cell setDictionary:_dataArray[indexPath.row] isFujin:_isFujing];
+    
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
+    [SVProgressHUD show];
+    NSString *url=MOBILE_SERVER_URL(@"shopApi.php");
+    
+    TokenURLRequest *request = [[TokenURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+    NSString * body = [NSString stringWithFormat:@"act=3&shop_id=%@",[self.dataArray[indexPath.row] objectForKey:@"id"]];
+    
+    DLog(@"body:%@",body);
+    [request setHTTPMethod: @"POST"];
+    [request setHTTPBody: [body dataUsingEncoding: NSUTF8StringEncoding]];
+    
+    AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    op.responseSerializer = [AFJSONResponseSerializer serializer];
+    [op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DLog(@"responseObject:%@",responseObject);
+        
+        if ([[responseObject objectForKey:@"is_success"] intValue] == 1) {
+            [SVProgressHUD dismiss];
+            NSDictionary *dic = [NSDictionary dictionary];
+            dic = [responseObject objectForKey:@"shop_info"];
+            OtherDetailController *vc = [[OtherDetailController alloc]init];
+            vc.dataDic = dic;
+            vc.dicDic = _dataArray[indexPath.row];
+            [self.navigationController pushViewController:vc animated:YES];
+            
+        }else {
+            [SVProgressHUD showErrorWithStatus:[responseObject objectForKey:@"info"] duration:1.5f];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error){
+        [SVProgressHUD showErrorWithStatus:@"网络错误"];
+    }];
+    [op start];
+}
+#pragma mark - http
+- (void)getDataforSec {
+    [SVProgressHUD show];
+    NSString *url=MOBILE_SERVER_URL(@"shopApi.php");
+
+    TokenURLRequest *request = [[TokenURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+    NSString * body = [NSString stringWithFormat:@"act=1"];
+    
+    DLog(@"body:%@",body);
+    [request setHTTPMethod: @"POST"];
+    [request setHTTPBody: [body dataUsingEncoding: NSUTF8StringEncoding]];
+    
+    AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    op.responseSerializer = [AFJSONResponseSerializer serializer];
+    [op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DLog(@"responseObject:%@",responseObject);
+        
+        if ([[responseObject objectForKey:@"is_success"] intValue] == 1) {
+            [SVProgressHUD dismiss];
+            self.allDataArray = responseObject[@"list"];
+            
+            if (self.allDataArray.count != 0) {
+                cid = [self.allDataArray[0] objectForKey:@"cid"];
+            }
+            [self getDataForList];
+        }else {
+            [SVProgressHUD showErrorWithStatus:[responseObject objectForKey:@"info"] duration:1.0f];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error){
+        [SVProgressHUD showErrorWithStatus:@"网络错误"];
+    }];
+    [op start];
+}
+
+- (void)getDataForList {
+    [SVProgressHUD show];
+    NSString *url=MOBILE_SERVER_URL(@"shopApi.php");
+    NSString *gps=[[PreferenceManager sharedManager] preferenceForKey:@"gps"];
+    NSArray *tempGps=[gps componentsSeparatedByString:@","];
+     CLLocationCoordinate2D from;
+    if (tempGps.count==2) {
+        from.longitude=[[tempGps objectAtIndex:0] doubleValue];
+        from.latitude=[[tempGps objectAtIndex:1] doubleValue];
+    }
+
+    TokenURLRequest *request = [[TokenURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+    NSString * body;
+    body = [NSString stringWithFormat:@"act=2&cid=%@&p=%ld&number_of_page=10&lat=%f&lng=%f", cid,(long)self.curP,from.latitude,from.longitude];
+    if (self.isQuanbu) {
+        body = [NSString stringWithFormat:@"come_way=2&act=2&cid=%@&p=%ld&number_of_page=10&lat=%f&lng=%f", cid,(long)self.curP,from.latitude,from.longitude];
+    }
+    //销量最高
+    if (self.isSales) {
+        body = [NSString stringWithFormat:@"order=sales&act=2&cid=%@&p=%ld&number_of_page=10&lat=%f&lng=%f", cid,(long)self.curP,from.latitude,from.longitude];
+    }
+    if (self.isFujing) {
+        body = [NSString stringWithFormat:@"come_way=2&act=2&cid=%@&p=%ld&number_of_page=10&lat=%f&lng=%f", cid,(long)self.curP,from.latitude,from.longitude];
+    }
+    [request setHTTPMethod:@"POST"];
+    [request setHTTPBody: [body dataUsingEncoding: NSUTF8StringEncoding]];
+    AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    op.responseSerializer = [AFJSONResponseSerializer serializer];
+    [op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if ([[responseObject objectForKey:@"is_success"] intValue] == 1) {
+            [SVProgressHUD dismiss];
+            [self createChoseView];
+            [self createClassView];
+            [self creatBackView];
+            if (self.curP == 1) {
+                [self.dataArray removeAllObjects];
+                for (NSDictionary *dic in responseObject[@"list"]) {
+                    [self.dataArray addObject:dic];
+                }
+                 [_tableview reloadData];
+            }else {
+                for (NSDictionary *dic in responseObject[@"list"]) {
+                    [self.dataArray addObject:dic];
+                }
+                 [_tableview reloadData];
+            }
+            [self upDataTitle];
+        }else {
+            [SVProgressHUD showErrorWithStatus:[responseObject objectForKey:@"info"] duration:1.5f];
+        }
+        UIImageView *image = self.imageArray[0];
+        if (self.dataArray.count == 0) {
+            image.hidden = NO;
+        }else {
+            image.hidden = YES;
+        }
+        [_footer endRefreshing];
+        [_header endRefreshing];
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error){
+        [SVProgressHUD showErrorWithStatus:@"网络错误"];
+        [_footer endRefreshing];
+        [_header endRefreshing];
+        UIImageView *image = self.imageArray[0];
+        if (self.dataArray.count == 0) {
+            image.hidden = NO;
+        }else {
+            image.hidden = YES;
+        }
+    }];
+    [op start];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+@end

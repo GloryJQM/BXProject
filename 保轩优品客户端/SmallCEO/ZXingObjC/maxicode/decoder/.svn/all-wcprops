@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/maxicode/decoder
+END
+ZXMaxiCodeDecodedBitStreamParser.h
+K 25
+svn:wc:ra_dav:version-url
+V 155
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/maxicode/decoder/ZXMaxiCodeDecodedBitStreamParser.h
+END
+ZXMaxiCodeBitMatrixParser.h
+K 25
+svn:wc:ra_dav:version-url
+V 148
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/maxicode/decoder/ZXMaxiCodeBitMatrixParser.h
+END
+ZXMaxiCodeDecodedBitStreamParser.m
+K 25
+svn:wc:ra_dav:version-url
+V 155
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/maxicode/decoder/ZXMaxiCodeDecodedBitStreamParser.m
+END
+ZXMaxiCodeBitMatrixParser.m
+K 25
+svn:wc:ra_dav:version-url
+V 148
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/maxicode/decoder/ZXMaxiCodeBitMatrixParser.m
+END
+ZXMaxiCodeDecoder.h
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/maxicode/decoder/ZXMaxiCodeDecoder.h
+END
+ZXMaxiCodeDecoder.m
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/maxicode/decoder/ZXMaxiCodeDecoder.m
+END

@@ -1,0 +1,167 @@
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder
+END
+ZXBase256Encoder.h
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXBase256Encoder.h
+END
+ZXHighLevelEncoder.h
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXHighLevelEncoder.h
+END
+ZXSymbolShapeHint.h
+K 25
+svn:wc:ra_dav:version-url
+V 142
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXSymbolShapeHint.h
+END
+ZXX12Encoder.h
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXX12Encoder.h
+END
+ZXBase256Encoder.m
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXBase256Encoder.m
+END
+ZXHighLevelEncoder.m
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXHighLevelEncoder.m
+END
+ZXDefaultPlacement.h
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXDefaultPlacement.h
+END
+ZXSymbolShapeHint.m
+K 25
+svn:wc:ra_dav:version-url
+V 142
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXSymbolShapeHint.m
+END
+ZXX12Encoder.m
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXX12Encoder.m
+END
+ZXSymbolInfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXSymbolInfo.h
+END
+ZXDefaultPlacement.m
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXDefaultPlacement.m
+END
+ZXEncoderContext.h
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXEncoderContext.h
+END
+ZXTextEncoder.h
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXTextEncoder.h
+END
+ZXC40Encoder.h
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXC40Encoder.h
+END
+ZXSymbolInfo.m
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXSymbolInfo.m
+END
+ZXASCIIEncoder.h
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXASCIIEncoder.h
+END
+ZXDataMatrixSymbolInfo144.h
+K 25
+svn:wc:ra_dav:version-url
+V 150
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXDataMatrixSymbolInfo144.h
+END
+ZXEncoderContext.m
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXEncoderContext.m
+END
+ZXTextEncoder.m
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXTextEncoder.m
+END
+ZXC40Encoder.m
+K 25
+svn:wc:ra_dav:version-url
+V 137
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXC40Encoder.m
+END
+ZXASCIIEncoder.m
+K 25
+svn:wc:ra_dav:version-url
+V 139
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXASCIIEncoder.m
+END
+ZXDataMatrixSymbolInfo144.m
+K 25
+svn:wc:ra_dav:version-url
+V 150
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXDataMatrixSymbolInfo144.m
+END
+ZXDataMatrixEncoder.h
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXDataMatrixEncoder.h
+END
+ZXEdifactEncoder.h
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXEdifactEncoder.h
+END
+ZXDataMatrixErrorCorrection.h
+K 25
+svn:wc:ra_dav:version-url
+V 152
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXDataMatrixErrorCorrection.h
+END
+ZXEdifactEncoder.m
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXEdifactEncoder.m
+END
+ZXDataMatrixErrorCorrection.m
+K 25
+svn:wc:ra_dav:version-url
+V 152
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/datamatrix/encoder/ZXDataMatrixErrorCorrection.m
+END

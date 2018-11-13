@@ -1,0 +1,590 @@
+//
+//  CityListViewController.m
+//  Jiang
+//
+//  Created by huang on 16/12/29.
+//  Copyright © 2016年 quanmai. All rights reserved.
+//
+
+#import "CityListViewController.h"
+#import "CitySearchResultViewController.h"
+#import "TextSearchTextField.h"
+
+@interface CharacterView : UIView
+
+@property (nonatomic, strong) UILabel *characterLabel;
+
+@end
+
+@implementation CharacterView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame])
+    {
+        self.backgroundColor = [UIColor clearColor];
+        
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+        imageView.image = [UIImage imageNamed:@"pho_sanxian@2x"];
+        imageView.clipsToBounds = YES;
+        [self addSubview:imageView];
+        
+        self.characterLabel = [[UILabel alloc] initWithFrame:self.bounds];
+        self.characterLabel.textColor = [UIColor whiteColor];
+        self.characterLabel.font = [UIFont systemFontOfSize:18.0];
+        self.characterLabel.textAlignment = NSTextAlignmentCenter;
+        self.characterLabel.layer.cornerRadius = frame.size.height;
+        [self addSubview:self.characterLabel];
+    }
+    
+    return self;
+}
+
+- (CGSize)intrinsicContentSize
+{
+    return CGSizeMake(60, 60);
+}
+
+@end
+
+@interface CityListViewController () <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate,CLLocationManagerDelegate>
+
+@property (nonatomic, strong) TextSearchTextField *textSearchTextField;
+@property (nonatomic, strong) UITableView *cityListTableView;
+
+@property (nonatomic, strong) UIView *headerView;
+
+@property (nonatomic, copy)   NSArray *hotCitys;
+@property (nonatomic, copy)   NSDictionary *allCitys;
+@property (nonatomic, copy)   NSArray <NSString *> *sortedInitials;
+
+@property (nonatomic, strong) UILabel *currentCityLabel;
+
+@property (nonatomic, strong) CharacterView *character;
+
+@property (nonatomic, strong) CitySearchResultViewController *resultVC;
+
+@property(nonatomic,strong) CLLocationManager  *locationManager;
+
+@end
+
+@implementation CityListViewController
+
+#pragma mark - Life cycle
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.view.backgroundColor = [UIColor colorFromHexCode:@"F0F0F0"];
+    
+    [self p_initMainView];
+    [self requestAllCitys];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)dealloc
+{
+    [_locationManager stopUpdatingLocation];
+    _locationManager = nil;
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+- (void)hidecharecter {
+    _character.hidden = YES;
+}
+#pragma mark - UITableViewDataSource
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    if (section == 0)
+    {
+        return self.hotCitys.count;
+    }
+    else
+    {
+        return [self.allCitys[self.sortedInitials[section]] count];
+    }
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return self.sortedInitials.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString * cellStr = @"CityListCell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellStr];
+    if (!cell)
+    {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellStr];
+        cell.backgroundColor = [UIColor whiteColor];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    
+    if (indexPath.section == 0)
+    {
+        cell.textLabel.text = [NSString stringWithFormat:@"%@", self.hotCitys[indexPath.row]];
+    }
+    else
+    {
+        NSArray *citys = self.allCitys[self.sortedInitials[indexPath.section]];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@", citys[indexPath.row]];
+    }
+    
+    return cell;
+}
+
+#pragma mark - UITableViewDelegate
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 50.0;
+}
+
+- (NSArray<NSString *> *)sectionIndexTitlesForTableView:(UITableView *)tableView
+{
+    return self.sortedInitials;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
+{
+    if (_character) {
+        [_character removeFromSuperview];
+    }
+    _character = [[CharacterView alloc] initWithFrame:CGRectMake(UI_SCREEN_WIDTH/2-30, UI_SCREEN_HEIGHT/2+20, 60, 60)];
+    _character.characterLabel.text = title;
+    [self.view addSubview:_character];
+    _character.hidden = NO;
+    [self performSelector:@selector(hidecharecter) withObject:nil afterDelay:0.5];
+    
+    return index;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.selectCityBlock)
+    {
+        if (indexPath.section == 0)
+        {
+            self.selectCityBlock(self.hotCitys[indexPath.row]);
+        }
+        else
+        {
+            NSArray *citys = self.allCitys[self.sortedInitials[indexPath.section]];
+            self.selectCityBlock(citys[indexPath.row]);
+        }
+    }
+    
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 30.0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    if (section == 0)
+    {
+        return 30.0;
+    }
+    else
+    {
+        return 0.01;
+    }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    if (section == 0)
+    {
+        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.cityListTableView.width, 30.0)];
+        headerView.backgroundColor = self.view.backgroundColor;
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, headerView.height, headerView.height)];
+        imageView.contentMode = UIViewContentModeCenter;
+        imageView.image = [UIImage imageNamed:@"icon_remenchengshi@2x"];
+        [headerView addSubview:imageView];
+        
+        UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(imageView.maxX, 0, 200, headerView.height)];
+        textLabel.text = @"热门城市";
+        textLabel.font = [UIFont systemFontOfSize:16.0];
+        [headerView addSubview:textLabel];
+        
+        return headerView;
+    }
+    else
+    {
+        UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.cityListTableView.width, 30.0)];
+        headerView.backgroundColor = self.view.backgroundColor;
+        UILabel *headerTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 5, headerView.width, headerView.height - 10.0)];
+        headerTextLabel.backgroundColor = [UIColor whiteColor];
+        headerTextLabel.text = [NSString stringWithFormat:@"  %@", self.sortedInitials[section]];
+        headerTextLabel.layer.cornerRadius = 5.0;
+        headerTextLabel.clipsToBounds = YES;
+        headerTextLabel.font = [UIFont systemFontOfSize:16.0];
+        [headerView addSubview:headerTextLabel];
+        
+        return headerView;
+    }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    if (section == 0)
+    {
+        UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.cityListTableView.width, 30.0)];
+        footerView.backgroundColor = self.view.backgroundColor;
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, footerView.height, footerView.height)];
+        imageView.contentMode = UIViewContentModeCenter;
+        imageView.image = [UIImage imageNamed:@"icon_chengshixuanze@2x"];
+        [footerView addSubview:imageView];
+        
+        UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(imageView.maxX, 0, 200, footerView.height)];
+        textLabel.text = @"选择城市";
+        textLabel.font = [UIFont systemFontOfSize:16.0];
+        [footerView addSubview:textLabel];
+        
+        return footerView;
+    }
+    else
+    {
+        return [UIView new];
+    }
+}
+
+#pragma mark - UIScrollViewDelegate
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    [self.textSearchTextField resignFirstResponder];
+}
+
+#pragma mark - TextFieldValueChanged method
+- (void)textFieldValueChanged:(UITextField *)textField
+{
+    if (textField.text.length == 0)
+    {
+        //[self.view sendSubviewToBack:self.resultVC.view];
+        self.resultVC.view.hidden = YES;
+    }
+    else
+    {
+        NSMutableArray *filteredCitys = [NSMutableArray new];
+        for (NSArray *citys in self.allCitys.allValues) {
+            for (NSString *cityStr in citys) {
+                if ([cityStr containsString:textField.text])
+                {
+                    [filteredCitys addObject:cityStr];
+                }
+            }
+        }
+        self.resultVC.filteredCitys = [filteredCitys copy];
+        [self.view bringSubviewToFront:self.resultVC.view];
+        self.resultVC.view.hidden = NO;
+    }
+}
+
+#pragma mark - UIButton selector
+- (void)popCurrentVC
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)relocate
+{
+    [SVProgressHUD show];
+    [self loadLocation];
+}
+//取消键盘
+-(void)missKeyBoard{
+    [self.view endEditing:YES];
+}
+#pragma mark - 定位
+-(void)loadLocation
+{
+    if ([CLLocationManager locationServicesEnabled] &&[CLLocationManager authorizationStatus]!=kCLAuthorizationStatusDenied) {
+        if ( self.locationManager == nil) {
+            self.locationManager = [[CLLocationManager alloc] init];
+            self.locationManager.delegate = self;
+            self.locationManager.distanceFilter = 1000.0f;
+            self.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
+        }
+        if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0){
+            
+            
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= C_IOS8_VALUE
+            
+            [self.locationManager requestWhenInUseAuthorization];
+#else
+            
+#endif
+            
+        }
+        
+        [self.locationManager startUpdatingLocation];
+    }else{
+        [SVProgressHUD showErrorWithStatus:@"定位功能未开启"];
+        DLog(@"开启定位功能");
+    }
+}
+- (void)locationManager:(CLLocationManager *)manager
+     didUpdateLocations:(NSArray *)locations
+{
+    CLLocation *location = [locations firstObject];
+    NSString *locationStr = [NSString stringWithFormat:@"%f,%f",location.coordinate.longitude,location.coordinate.latitude];
+    NSLog(@"当前的经纬度是%@",locationStr);
+    [[PreferenceManager sharedManager] setPreference:locationStr forKey:@"gps"];
+    [self.locationManager stopUpdatingLocation];
+    
+    _locationManager.desiredAccuracy = kCLLocationAccuracyBest; //指定需要的精度级别
+    _locationManager.distanceFilter = kCLDistanceFilterNone; //设置距离筛选器 ，动1000米才有反应
+    
+    //    [_locationManager startUpdatingLocation];
+    CLLocationDegrees latitude = _locationManager.location.coordinate.latitude; //float也行，获得当前位置的纬度.location属性获
+    
+    CLLocationDegrees longitude = _locationManager.location.coordinate.longitude;
+    
+    CLLocationCoordinate2D mylocation;
+    mylocation.latitude=latitude;
+    
+    mylocation.longitude=longitude;
+    
+    [self showWithlocation:mylocation];
+}
+-(void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    [manager stopUpdatingLocation];
+    DLog(@"定位失败的原因是%@",[error localizedDescription]);
+    
+    switch ([error code]) {
+        case kCLErrorDenied:
+        {
+            DLog(@"重新开启定位功能");
+            [SVProgressHUD showErrorWithStatus:@"请重新开启定位功能"];
+        }
+            break;
+        case kCLErrorLocationUnknown:
+        {
+            DLog(@"定位功能不能使用");
+            [SVProgressHUD showErrorWithStatus:@"定位功能不能使用"];
+        }
+            break;
+            
+        default:
+        {
+            DLog(@"定位失败");
+            [SVProgressHUD showErrorWithStatus:@"定位失败"];
+        }
+            break;
+    }
+    
+}
+
+- (void)showWithlocation:(CLLocationCoordinate2D)location {
+    
+    [SVProgressHUD showSuccessWithStatus:@"已定位到当前城市"];
+    CLGeocoder *Geocoder=[[CLGeocoder alloc]init];
+    
+    CLGeocodeCompletionHandler handler = ^(NSArray *place, NSError *error) {
+        
+        for (CLPlacemark *placemark in place) {
+            DLog(@"placemark.addressDictionary --%@",placemark.addressDictionary );
+            DLog(@"name,%@",placemark.addressDictionary[@"Name"]);   // 位置名
+            DLog(@"State,%@",placemark.addressDictionary[@"State"]); // 省
+            DLog(@"City,%@",placemark.addressDictionary[@"City"]); // 市
+            DLog(@"subLocality,%@",placemark.addressDictionary[@"SubLocality"]);// 区
+            DLog(@"thoroughfare,%@",placemark.addressDictionary[@"Thoroughfare"]); // 街道
+            DLog(@"subThoroughfare,%@",placemark.addressDictionary[@"Street"]); // 子街道
+            DLog(@"FormattedAddressLines,%@",placemark.addressDictionary[@"FormattedAddressLines"][0]); // 详细
+            DLog(@"%@",[[PreferenceManager sharedManager]allData]);
+            
+            NSString *cityStr=[placemark.addressDictionary objectForKey:@"City"];
+            NSString *provicestr = [placemark.addressDictionary objectForKey:@"State"];
+            NSString *zoneStr= [placemark.addressDictionary objectForKey:@"SubLocality"];
+            //区
+            if(cityStr==nil||provicestr==nil){
+                return ;
+            }
+            
+            
+            if ([[PreferenceManager sharedManager] preferenceForKey:@"cityname"] && ![[[PreferenceManager sharedManager] preferenceForKey:@"cityname"] isEqualToString:@""]) {
+                if (![[[PreferenceManager sharedManager] preferenceForKey:@"cityname"] isEqualToString:cityStr]&&![[[PreferenceManager sharedManager] preferenceForKey:@"cityid"] isEqualToString:provicestr]) {
+                    NSString *cityStr = [[PreferenceManager sharedManager] preferenceForKey:@"cityname"];
+                    cityStr = [cityStr isValid] &&  [self isLocationEnable] ? [NSString stringWithFormat:@" 当前城市 : %@", cityStr] : @"当前城市 : 定位失败";
+                    self.currentCityLabel.text = cityStr;
+                }
+            }else{
+                [[PreferenceManager sharedManager] setPreference:[NSString stringWithFormat:@"%@",cityStr] forKey:@"cityname"];
+                [[PreferenceManager sharedManager] setPreference:[NSString stringWithFormat:@"%@",provicestr] forKey:@"cityid"];
+                NSString *cityStr = [[PreferenceManager sharedManager] preferenceForKey:@"cityname"];
+                cityStr = [cityStr isValid] &&  [self isLocationEnable] ? [NSString stringWithFormat:@" 当前城市 : %@", cityStr] : @"当前城市 : 定位失败";
+                self.currentCityLabel.text = cityStr;
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"cityreloadhomecustom" object:nil];
+            }
+            
+            DLog(@"location Success:cityStr(cityname):%@  provicestr(cityid):%@",cityStr,provicestr);
+            break;
+        }
+    };
+    
+    CLLocation *loc = [[CLLocation alloc] initWithLatitude:location.latitude longitude:location.longitude];
+    
+    [Geocoder reverseGeocodeLocation:loc completionHandler:handler];
+    
+}
+
+#pragma mark - Http request methods
+- (void)requestAllCitys
+{
+    [SVProgressHUD show];
+    
+    NSString *url = MOBILE_SERVER_URL(@"getCityApi.php");
+    TokenURLRequest *requset = [[TokenURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+    [requset setHTTPMethod:@"POST"];
+    NSString *body = @"act=1";
+    [requset setHTTPBody:[body dataUsingEncoding:NSUTF8StringEncoding]];
+
+    AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:requset];
+    op.responseSerializer = [AFJSONResponseSerializer serializer];
+    [op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"responseObject:%@",responseObject);
+        if ([[responseObject objectForKey:@"is_success"] intValue] == 1) {
+            [SVProgressHUD dismiss];
+            self.hotCitys = responseObject[@"cityHot"];
+            self.allCitys = responseObject[@"cityLetterList"];
+            NSArray *allKeys = self.allCitys.allKeys;
+            NSMutableArray *tempInitials = [NSMutableArray new];
+            [tempInitials addObject:@"."];
+            [tempInitials addObject:@"热"];
+            NSArray *tempArray =[allKeys sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+                return [obj1 compare:obj2 options:NSNumericSearch];
+            }];
+            [tempInitials addObjectsFromArray:tempArray];
+            [tempInitials addObject:@"#"];
+            [tempInitials addObject:@"."];
+            self.sortedInitials = [tempInitials copy];
+            [self.cityListTableView reloadData];
+            [self.textSearchTextField becomeFirstResponder];
+        }else{
+            [SVProgressHUD dismissWithError:@"网络错误"];
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [SVProgressHUD dismissWithError:@"网络错误"];
+        DLog(@"errorStrign:%@  \nerror:%@",operation.responseString,error);
+    }];
+    [op start];
+    
+}
+
+#pragma mark - Private methods
+- (void)p_getLocationCitySuccessful:(NSNotification *)notification {
+    [SVProgressHUD dismiss];
+    NSString *cityName = notification.object;
+    if ([cityName isValid])
+    {
+        self.currentCityLabel.text = [NSString stringWithFormat:@" 当前城市 : %@", cityName];
+    }
+}
+
+- (void)p_getLocationCityFailed {
+    [SVProgressHUD dismiss];
+}
+
+- (void)p_initMainView {
+    UIView *titleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, HeightForNagivationBarAndStatusBar)];
+    titleView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:titleView];
+    
+    CGFloat leftMargin = 15.0;
+    CGFloat topMargin = 5.0;
+    CGFloat statusBarHeight = 20.0;
+    
+    self.textSearchTextField = [[TextSearchTextField alloc] initWithFrame:CGRectMake(leftMargin, topMargin + statusBarHeight, titleView.width - leftMargin * 2, titleView.height - topMargin * 2 - statusBarHeight)];
+    [titleView addSubview:self.textSearchTextField];
+    self.textSearchTextField.layer.cornerRadius = 5.0;
+    self.textSearchTextField.placeholder = @"输入城市名字";
+    self.textSearchTextField.backgroundColor = self.view.backgroundColor;
+    [self.textSearchTextField.cancelButton addTarget:self action:@selector(popCurrentVC) forControlEvents:UIControlEventTouchUpInside];
+    [self.textSearchTextField addTarget:self action:@selector(textFieldValueChanged:) forControlEvents:UIControlEventEditingChanged];
+    
+    
+    CGFloat tableViewOrignalY = titleView.height + topMargin * 2;
+    UITableView *cityListTableView = [[UITableView alloc] initWithFrame:CGRectMake(leftMargin, tableViewOrignalY, UI_SCREEN_WIDTH - 2 * leftMargin, UI_SCREEN_HEIGHT - tableViewOrignalY)];
+    cityListTableView.backgroundColor = self.view.backgroundColor;
+    cityListTableView.layer.cornerRadius = 5.0;
+    cityListTableView.clipsToBounds = YES;
+    cityListTableView.dataSource = self;
+    cityListTableView.delegate = self;
+    cityListTableView.sectionIndexColor = [UIColor blackColor];
+    cityListTableView.sectionIndexBackgroundColor = [UIColor clearColor];
+    cityListTableView.tableFooterView = [UIView new];
+    [self.view addSubview:cityListTableView];
+    self.cityListTableView = cityListTableView;
+    
+    cityListTableView.tableHeaderView = self.headerView;
+    
+    CitySearchResultViewController *resultVC = [CitySearchResultViewController new];
+    resultVC.selectFilteredCitysBlock = ^ (NSString *cityStr) {
+        self.selectCityBlock(cityStr);
+        [self.navigationController popViewControllerAnimated:YES];
+    };
+    [self addChildViewController:resultVC];
+    resultVC.view.frame = CGRectMake(0, HeightForNagivationBarAndStatusBar, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - HeightForNagivationBarAndStatusBar);
+    [self.view addSubview:resultVC.view];
+    [self.view sendSubviewToBack:resultVC.view];
+    self.resultVC = resultVC;
+}
+
+- (BOOL)isLocationEnable {
+    BOOL systemEnable = [CLLocationManager locationServicesEnabled];
+    BOOL appEnable = [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse || [CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedAlways;
+    return systemEnable && appEnable;
+}
+
+#pragma mark - Getter
+- (UIView *)headerView {
+    if (!_headerView) {
+        _headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.cityListTableView.width, 50)];
+        UIView *whiteBackgroundView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, _headerView.width, 44)];
+        whiteBackgroundView.backgroundColor = [UIColor whiteColor];
+        whiteBackgroundView.layer.cornerRadius = 5.0;
+        whiteBackgroundView.clipsToBounds = YES;
+        [_headerView addSubview:whiteBackgroundView];
+        
+        UIImageView *locationImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 10, 24, 24)];
+        locationImageView.image = [UIImage imageNamed:@"icon_city_location.png"];
+        
+        UIImageView *currentLocationImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, 10, 24, 24)];
+        currentLocationImageView.image = [UIImage imageNamed:@"icon_chengshidinwei@2x"];
+        [whiteBackgroundView addSubview:currentLocationImageView];
+        
+        NSString *cityStr = [[PreferenceManager sharedManager] preferenceForKey:@"cityname"];
+        cityStr = [cityStr isValid] &&  [self isLocationEnable] ? [NSString stringWithFormat:@" 当前城市 : %@", cityStr] : @"当前城市 : 定位失败";
+        UILabel *currentLocationLabel = [[UILabel alloc] initWithFrame:CGRectMake(currentLocationImageView.maxX, 0, 150, whiteBackgroundView.height)];
+        currentLocationLabel.font = [UIFont systemFontOfSize:15.0];
+        currentLocationLabel.text = cityStr;
+        self.currentCityLabel = currentLocationLabel;
+        [_headerView addSubview:currentLocationLabel];
+        
+        currentLocationLabel.userInteractionEnabled = YES;
+        UITapGestureRecognizer *Tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(relocate)];
+        [currentLocationLabel addGestureRecognizer:Tap];
+        
+    }
+    
+    return _headerView;
+}
+
+@end

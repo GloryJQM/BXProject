@@ -1,0 +1,359 @@
+//
+//  OrderListDetailsViewController.m
+//  SmallCEO
+//
+//  Created by 任成龙 on 2017/7/12.
+//  Copyright © 2017年 lemuji. All rights reserved.
+//
+
+#import "OrderListDetailsViewController.h"
+#import "OrderStatusView.h"
+#import "OrderAddressView.h"
+#import "SupplierView.h"
+#import "OrderPayViewController.h"
+#import "LogisticsViewController.h"
+@interface OrderListDetailsViewController ()
+@property (nonatomic, strong) UIScrollView *mainScrollView;
+@property (nonatomic, copy) NSString *order_id;
+@property (nonatomic, strong) NSDictionary *pay_info;
+@property (nonatomic, strong) OrderStatusView *orderStatusView;
+
+@property (nonatomic, strong) NSDictionary *payDic;
+@end
+
+@implementation OrderListDetailsViewController
+
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.title = @"订单详情";
+    self.view.backgroundColor = backWhite;
+    self.order_id = [NSString stringWithFormat:@"%@", self.dataDic[@"order_id"]];
+    self.is_point_type = [self.dataDic[@"is_point_type"] integerValue];
+    [self creationScrollView];
+}
+
+- (void)creationScrollView {
+    self.mainScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - 64 - 64)];
+    _mainScrollView.backgroundColor = backWhite;
+    [self.view addSubview:_mainScrollView];
+    
+    self.orderStatusView = [[OrderStatusView alloc] initWithY:0 dataDic:self.dataDic];
+    [_mainScrollView addSubview:_orderStatusView];
+    
+    OrderAddressView *orderAddressView = [[OrderAddressView alloc] initWithY:_orderStatusView.maxY + 10 dataDic:self.dataDic];
+    [_mainScrollView addSubview:orderAddressView];
+    orderAddressView.is_point_type = self.is_point_type;
+    
+    
+    CGFloat supplierY = orderAddressView.maxY + 10;
+    
+    NSArray *supplierAry = self.dataDic[@"goods_list"];
+    for (int i = 0; i < supplierAry.count; i++) {
+        NSDictionary *supplierDic = supplierAry[i];
+        SupplierView *supplierView = [[SupplierView alloc] initWithY:supplierY dataDic:supplierDic is_point_type:self.is_point_type];
+        [_mainScrollView addSubview:supplierView];
+        
+        NSString *value = [NSString stringWithFormat:@"%@", supplierDic[@"status_value"]];
+        if ([value isEqualToString:@"3"] || [value isEqualToString:@"4"]) {
+            UIView *bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, supplierView.maxY, UI_SCREEN_WIDTH, 64)];
+            bottomView.backgroundColor = [UIColor whiteColor];
+            [_mainScrollView addSubview:bottomView];
+            
+            [bottomView addLineWithY:0];
+            
+            UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+            button.frame = CGRectMake(UI_SCREEN_WIDTH - 88 - 15 , 12, 88, 40);
+            [button setTitle:@"查看物流" forState:UIControlStateNormal];
+            button.titleLabel.font = [UIFont systemFontOfSize:14];
+            [button addTarget:self action:@selector(handleButton:) forControlEvents:UIControlEventTouchUpInside];
+            [bottomView addSubview:button];
+            button.layer.cornerRadius = 2;
+            button.layer.masksToBounds = YES;
+            button.layer.borderColor = App_Main_Color.CGColor;
+            button.layer.borderWidth = 1;
+            button.tag = i;
+            [button setTitleColor:App_Main_Color forState:UIControlStateNormal];
+            supplierY = bottomView.maxY + 10;
+        }else {
+            supplierY = supplierView.maxY + 10;
+        }
+    }
+    
+    [_mainScrollView addLineWithY:supplierY - 9.5];
+    
+    UIView *backView = [[UIView alloc] init];
+    backView.backgroundColor = [UIColor whiteColor];
+    [_mainScrollView addSubview:backView];
+    
+    NSArray *titleAry;
+    NSArray *contentAry;
+    CGFloat use_coupon = [self.dataDic[@"use_coupon"] floatValue];
+    if (self.is_point_type == 0 && use_coupon > 0) {
+        titleAry = @[@"商品合计", @"代金券抵扣", @"运费"];
+        contentAry = @[@"goods_sum_money", @"use_coupon", @"order_freight"];
+    }else {
+        titleAry = @[@"商品合计", @"运费"];
+        contentAry = @[@"goods_sum_money", @"order_freight"];
+    }
+    
+    CGFloat titleY = 7;
+    for (int i = 0; i < titleAry.count; i++) {
+        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, titleY, 100, 20)];
+        titleLabel.text = titleAry[i];
+        titleLabel.textAlignment = NSTextAlignmentLeft;
+        titleLabel.font = [UIFont systemFontOfSize:13];
+        titleLabel.textColor = Color3D4E56;
+        [backView addSubview:titleLabel];
+        
+        UILabel *priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(titleLabel.maxX + 10, titleY, UI_SCREEN_WIDTH - 140, 20)];
+        NSString *price = [NSString stringWithFormat:@"%@", self.dataDic[contentAry[i]]];
+        priceLabel.textAlignment = NSTextAlignmentRight;
+        priceLabel.font = [UIFont systemFontOfSize:13];
+        priceLabel.textColor = Color3D4E56;
+        [backView addSubview:priceLabel];
+        
+        priceLabel.text = [NSString stringWithFormat:@"%@", [price money]];
+        if ([titleAry[i] isEqualToString:@"代金券抵扣"] && [price floatValue] > 0) {
+            priceLabel.text = [NSString stringWithFormat:@"-%@", [price money]];
+        }
+        
+        if ([titleAry[i] isEqualToString:@"商品合计"]) {
+            priceLabel.text = [NSString stringWithFormat:@"%@", [price moneyPoint:self.is_point_type]];
+            
+        }
+        
+        titleY = titleLabel.maxY + 7;
+    }
+    
+    [backView addLineWithY:titleY + 11];
+    
+    UILabel *sumLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, titleY + 25, UI_SCREEN_WIDTH - 30, 20)];
+    sumLabel.textAlignment = NSTextAlignmentRight;
+    sumLabel.font = [UIFont systemFontOfSize:16];
+    sumLabel.textColor = Color74828B;
+    NSString *goods_sum_money = [NSString stringWithFormat:@"%@", self.dataDic[@"goods_sum_money"]];
+    NSString *order_freight = [NSString stringWithFormat:@"%@", self.dataDic[@"order_freight"]];
+    NSString *order_sum = [NSString stringWithFormat:@"%@", self.dataDic[@"order_sum"]];
+    
+    NSString *sumStr;
+    if (self.is_point_type == 1) {
+        sumStr = [NSString stringWithFormat:@"%@+%@", [goods_sum_money moneyPoint:self.is_point_type],[order_freight money]];
+    }else {
+        sumStr = [NSString stringWithFormat:@"%@", [order_sum money]];
+    }
+    
+    sumLabel.attributedText = [[NSString stringWithFormat:@"共计 %@", sumStr] String:sumStr Color:Color3D4E56];
+    [backView addSubview:sumLabel];
+    
+    
+    NSString *is_rebate = [NSString stringWithFormat:@"%@", self.dataDic[@"is_rebate"]];
+    if ([is_rebate isEqualToString:@"1"] && self.is_point_type == 0) {
+        [backView addLineWithY:sumLabel.maxY + 15];
+        
+        UILabel *pointLabel = [[UILabel alloc] init];
+        pointLabel.textAlignment = NSTextAlignmentLeft;
+        pointLabel.font = [UIFont systemFontOfSize:14];
+        pointLabel.textColor = Color74828B;
+        
+        NSString *pointStr = [NSString stringWithFormat:@"返回积分%@点", self.dataDic[@"order_sum"]];
+        pointLabel.attributedText = [pointStr String:[NSString stringWithFormat:@"%@", self.dataDic[@"order_sum"]] Color:ColorD0011B];
+        
+        CGSize pointSize = [pointLabel sizeThatFits:CGSizeMake(200, 20)];
+        pointLabel.frame = CGRectMake(UI_SCREEN_WIDTH - pointSize.width - 15, sumLabel.maxY + 30, pointSize.width, 20);
+        [backView addSubview:pointLabel];
+        
+        UILabel *point = [[UILabel alloc] initWithFrame:CGRectMake(UI_SCREEN_WIDTH - pointLabel.width - 65, pointLabel.minY, 40, 20)];
+        point.textAlignment = NSTextAlignmentCenter;
+        point.backgroundColor = [UIColor colorWithRed:51/255.0 green:76/255.0 blue:107/255.0 alpha:0.5];;
+        point.textColor = [UIColor whiteColor];
+        point.text = @"积分";
+        point.font = [UIFont systemFontOfSize:12];
+        [backView addSubview:point];
+        
+        
+        UILabel *voucherLabel = [[UILabel alloc] init];
+        voucherLabel.textAlignment = NSTextAlignmentLeft;
+        voucherLabel.font = [UIFont systemFontOfSize:14];
+        voucherLabel.textColor = Color74828B;
+        
+        NSString *voucherStr = [NSString stringWithFormat:@"返回代金券%@点", self.dataDic[@"order_sum"]];
+        voucherLabel.attributedText = [voucherStr String:[NSString stringWithFormat:@"%@", self.dataDic[@"order_sum"]] Color:ColorD0011B];
+        
+        CGSize voucherSize = [voucherLabel sizeThatFits:CGSizeMake(200, 20)];
+        voucherLabel.frame = CGRectMake(UI_SCREEN_WIDTH - voucherSize.width - 15, pointLabel.maxY + 15, voucherSize.width, 20);
+        [backView addSubview:voucherLabel];
+        
+        UILabel *voucher = [[UILabel alloc] initWithFrame:CGRectMake(UI_SCREEN_WIDTH - voucherLabel.width - 85, voucherLabel.minY, 60, 20)];
+        voucher.textAlignment = NSTextAlignmentCenter;
+        voucher.backgroundColor = [UIColor colorWithRed:51/255.0 green:76/255.0 blue:107/255.0 alpha:0.5];
+        voucher.textColor = [UIColor whiteColor];
+        voucher.text = @"代金券";
+        voucher.font = [UIFont systemFontOfSize:12];
+        [backView addSubview:voucher];
+        
+        backView.frame = CGRectMake(0, supplierY - 9, UI_SCREEN_WIDTH, voucher.maxY + 15);
+    }else {
+       backView.frame = CGRectMake(0, supplierY - 9, UI_SCREEN_WIDTH, sumLabel.maxY + 15);
+    }
+    
+    UIView *secondView = [[UIView alloc] init];
+    secondView.backgroundColor = [UIColor whiteColor];
+    [_mainScrollView addSubview:secondView];
+    
+    NSString *status_value = [NSString stringWithFormat:@"%@", self.dataDic[@"status_value"]];
+    NSArray *array;
+    if ([status_value isEqualToString:@"1"] || [status_value isEqualToString:@"6"]) {
+        array = @[@"订单编号:", @"下单时间:"];
+    }else {
+        array = @[@"订单编号:", @"下单时间:", @"支付方式:"];
+    }
+    NSArray *orderAry = @[@"order_title", @"log_time", @"pay_method"];
+    CGFloat y = 18;
+    for (int i = 0; i < array.count; i++) {
+        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, y, UI_SCREEN_WIDTH - 30, 20)];
+        
+        titleLabel.text = [NSString stringWithFormat:@"%@ %@", array[i], self.dataDic[orderAry[i]]];
+        titleLabel.textAlignment = NSTextAlignmentLeft;
+        titleLabel.font = [UIFont systemFontOfSize:14];
+        titleLabel.textColor = [UIColor colorFromHexCode:@"#74828B"];
+        [secondView addSubview:titleLabel];
+        
+        y = titleLabel.maxY + 6;
+    }
+    
+    secondView.frame = CGRectMake(0, backView.maxY + 10, UI_SCREEN_WIDTH, y + 18);
+    
+    _mainScrollView.contentSize = CGSizeMake(UI_SCREEN_WIDTH, secondView.maxY + 30);
+    
+    
+    UIView *bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, _mainScrollView.maxY, UI_SCREEN_WIDTH, 64)];
+    bottomView.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:bottomView];
+    
+    
+    NSArray *bottomAry = [status_value getStatusArray];
+    for (int i = 0; i < bottomAry.count; i++) {
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.frame = CGRectMake(UI_SCREEN_WIDTH - (88 + 15) * (bottomAry.count - i), 12, 88, 40);
+        [button setTitle:bottomAry[i] forState:UIControlStateNormal];
+        button.titleLabel.font = [UIFont systemFontOfSize:14];
+        [button addTarget:self action:@selector(handleButton:) forControlEvents:UIControlEventTouchUpInside];
+        [bottomView addSubview:button];
+        button.layer.cornerRadius = 2;
+        button.layer.masksToBounds = YES;
+        if (i == 0) {
+            button.layer.borderColor = App_Main_Color.CGColor;
+            button.layer.borderWidth = 1;
+            [button setTitleColor:App_Main_Color forState:UIControlStateNormal];
+        }else {
+            button.backgroundColor = App_Main_Color;
+        }
+    }
+    
+    if (bottomAry.count == 0) {
+        [bottomView removeFromSuperview];
+        _mainScrollView.frame = CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - 64);
+    }
+    
+}
+
+- (void)handleButton:(UIButton *)sender {
+    NSString *string = [sender currentTitle];
+    if ([string isEqualToString:@"取消订单"]) {
+        [self cancelOrder];
+    }else if ([string isEqualToString:@"去支付"]) {
+        [self getPayMethod];
+    }else if ([string isEqualToString:@"查看物流"]) {
+        [self getLogistics:sender.tag];
+    }else if ([string isEqualToString:@"确认收货"]) {
+        [self postConfirmGoodsData];
+    }else if ([string isEqualToString:@"删除订单"]) {
+        RCLAlertView *rclAlerView = [[RCLAlertView alloc]initWithTitle:nil contentText:@"确认删除订单?" leftButtonTitle:@"否" rightButtonTitle:@"是"];
+        rclAlerView.rightBlock = ^(){
+            NSString *body=[NSString stringWithFormat:@"act=5&order_id=%@",self.order_id];
+            [RCLAFNetworking postWithUrl:@"orderForUserNew.php" BodyString:body isPOST:YES success:^(id responseObject) {
+                [SVProgressHUD showSuccessWithStatus:@"已删除"];
+                [self.navigationController popViewControllerAnimated:YES];
+            } fail:nil];
+        };
+        [rclAlerView show];
+    }
+}
+//取消订单
+- (void)cancelOrder {
+    RCLAlertView *rclAlerView = [[RCLAlertView alloc]initWithTitle:nil contentText:@"确认取消订单?" leftButtonTitle:@"否" rightButtonTitle:@"是"];
+    rclAlerView.rightBlock = ^(){
+        NSString *body=[NSString stringWithFormat:@"act=3&order_id=%@",self.order_id];
+        [RCLAFNetworking postWithUrl:@"orderForUserNew.php" BodyString:body isPOST:YES success:^(id responseObject) {
+            [SVProgressHUD showSuccessWithStatus:@"取消订单成功"];
+            [self.navigationController popViewControllerAnimated:YES];
+        } fail:nil];
+    };
+    [rclAlerView show];
+}
+
+//查看物流
+- (void)getLogistics:(NSInteger)index {
+    NSArray *goods_list = self.dataDic[@"goods_list"];
+    if ([goods_list isKindOfClass:[NSArray class]] && goods_list != nil) {
+        NSDictionary *supplierDic = goods_list[index];
+        NSString *supplier_id = supplierDic[@"supplier_id"];
+        NSString *bodyStr = [NSString stringWithFormat:@"act=list&order_id=%@&supplier_id=%@", self.order_id, supplier_id];
+        [RCLAFNetworking postWithUrl:@"getLogistics.php" BodyString:bodyStr isPOST:YES success:^(id responseObject) {
+            LogisticsViewController *vc = [[LogisticsViewController alloc] init];
+            vc.logistics_ids = responseObject[@"cont"][@"logistics_ids"];
+            [self.navigationController pushViewController:vc animated:YES];
+        } fail:nil];
+    }
+    
+    
+}
+//确认收货
+- (void)postConfirmGoodsData {
+    RCLAlertView *rclAlerView = [[RCLAlertView alloc]initWithTitle:nil contentText:@"确认收货?" leftButtonTitle:@"否" rightButtonTitle:@"是"];
+    rclAlerView.rightBlock = ^(){
+        NSString *body=[NSString stringWithFormat:@"act=2&order_id=%@",self.order_id];
+        [RCLAFNetworking postWithUrl:@"orderForUserNew.php" BodyString:body isPOST:YES success:^(id responseObject) {
+            [SVProgressHUD showSuccessWithStatus:@"已确认"];
+            [self.navigationController popViewControllerAnimated:YES];
+        } fail:nil];
+    };
+    [rclAlerView show];
+}
+
+
+//获取支付方式
+- (void)getPayMethod {
+    NSString*body=[NSString stringWithFormat:@"act=3&order_id=%@",self.order_id];
+    [RCLAFNetworking postWithUrl:@"orderApiNew.php" BodyString:body isPOST:YES success:^(id responseObject) {
+        OrderPayViewController *vc = [[OrderPayViewController alloc] init];
+        self.pay_info = [responseObject objectForKey:@"pay_info"];
+        vc.patInfoDic = self.pay_info;
+        vc.is_point_type = self.is_point_type;
+        vc.order_id = self.order_id;
+        vc.messageDic = responseObject[@"delivery_info"][@"express"];
+        [self.navigationController pushViewController:vc animated:YES];
+    } fail:nil];
+}
+
+
+//页面将要进入前台，开启定时器
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    //开启定时器
+    [self.orderStatusView.aTimer setFireDate:[NSDate distantPast]];
+}
+
+//页面消失，进入后台不显示该页面，关闭定时器
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    //关闭定时器
+    [self.orderStatusView.aTimer setFireDate:[NSDate distantFuture]];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+@end

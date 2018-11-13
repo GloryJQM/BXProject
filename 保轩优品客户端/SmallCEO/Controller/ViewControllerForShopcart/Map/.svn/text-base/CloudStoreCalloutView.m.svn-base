@@ -1,0 +1,165 @@
+//
+//  CloudStoreCalloutView.m
+//  SmallCEO
+//
+//  Created by huang on 16/4/26.
+//  Copyright © 2016年 lemuji. All rights reserved.
+//
+
+#import "CloudStoreCalloutView.h"
+
+
+@interface CloudStoreCalloutView ()
+
+@property (nonatomic, strong) NSString *title;
+@property (nonatomic, strong) NSString *subTitle;
+
+@property (nonatomic, strong) UIFont *titleFont;
+@property (nonatomic, strong) UIFont *subTitleFont;
+
+@property (nonatomic, strong) UIColor *titleTextColor;
+@property (nonatomic, strong) UIColor *subTitleTextColor;
+
+@property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong) UILabel *subTitleLabel;
+
+@property (nonatomic ,strong) UILabel *separateLine;
+@property (nonatomic ,strong) UILabel *separateLineBottom;
+
+@property (nonatomic, strong) UIButton *navigationButton;
+
+@end
+
+@implementation CloudStoreCalloutView
+
+- (instancetype)initWithTitle:(NSString *)title subTitle:(NSString *)subTitle
+{
+    self = [super init];
+    if (self)
+    {
+        self.title = title;
+        self.subTitle = subTitle;
+
+        [self initializationSettings];
+        [self setupMainView];
+    }
+    
+    return self;
+}
+
+- (void)initializationSettings
+{
+    self.backgroundColor = [UIColor whiteColor];
+    self.layer.cornerRadius = 5;
+    self.layer.borderWidth = 1;
+    self.layer.borderColor = [LINE_SHALLOW_COLOR CGColor];
+    self.clipsToBounds = YES;
+    
+    self.titleFont = [UIFont systemFontOfSize:15.0];
+    self.subTitleFont = [UIFont systemFontOfSize:15.0];
+    
+    self.titleTextColor = [UIColor blackColor];
+    self.subTitleTextColor = SUB_TITLE;
+    
+    UILabel *titleLabel = [UILabel new];
+    titleLabel.numberOfLines = 0;
+    titleLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+    titleLabel.font = self.titleFont;
+    titleLabel.text = self.title;
+    titleLabel.textColor = self.titleTextColor;
+    [self addSubview:titleLabel];
+    self.titleLabel = titleLabel;
+    
+    UILabel *subTitleLabel = [UILabel new];
+    subTitleLabel.numberOfLines = 2;
+    subTitleLabel.font = self.subTitleFont;
+    subTitleLabel.text = self.subTitle;
+    subTitleLabel.textColor = self.subTitleTextColor;
+    [self addSubview:subTitleLabel];
+    self.subTitleLabel = subTitleLabel;
+    
+    UILabel *separateLine = [UILabel new];
+    separateLine.backgroundColor = SUB_TITLE;
+    separateLine.alpha = 0.5;
+    self.separateLine = separateLine;
+
+    UILabel *separateLineBottom = [UILabel new];
+    separateLineBottom.backgroundColor = SUB_TITLE;
+    separateLineBottom.alpha = 0.5;
+    self.separateLineBottom = separateLineBottom;
+    
+    [self addSubview:separateLine];
+    [self addSubview:separateLineBottom];
+    
+    UIButton *navigationButton = [[UIButton alloc] initWithFrame:CGRectZero];
+    [navigationButton setImage:[UIImage imageNamed:@"csl_map_nav.png"] forState:UIControlStateNormal];
+    navigationButton.backgroundColor = [UIColor clearColor];
+    navigationButton.titleLabel.font = [UIFont systemFontOfSize:10.0];
+    [navigationButton addTarget:self action:@selector(clickNagivationButton) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:navigationButton];
+    self.navigationButton = navigationButton;
+    
+    UIButton *sureButton = [[UIButton alloc] initWithFrame:CGRectZero];
+    [sureButton setTitleColor:App_Main_Color forState:UIControlStateNormal];
+    sureButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
+    sureButton.backgroundColor = myRgba(247, 248, 243, 1);
+    [sureButton addTarget:self action:@selector(sureSelectCloudStore) forControlEvents:UIControlEventTouchUpInside];
+    [sureButton setTitle:@"确定" forState:UIControlStateNormal];
+    [self addSubview:sureButton];
+    self.sureButton = sureButton;
+}
+
+- (void)updateWithTitle:(NSString *)title subTitle:(NSString *)subTitle
+{
+    self.title = title;
+    self.subTitle = subTitle;
+    
+    self.titleLabel.text = title;
+    self.subTitleLabel.text = subTitle;
+    
+    [self setupMainView];
+}
+
+- (void)setupMainView
+{
+    CGFloat screenWidth = [UIScreen mainScreen].bounds.size.width;
+    CGFloat maxWidth = screenWidth - 120.0;
+    CGSize titleTextMaxSize = CGSizeMake(maxWidth, MAXFLOAT);
+    CGSize subTitleTextMaxSize = CGSizeMake(maxWidth, MAXFLOAT);
+    
+    CGSize titleSize = [self.titleLabel sizeThatFits:titleTextMaxSize];
+    self.titleLabel.frame = CGRectMake(5, 5, maxWidth, titleSize.height);
+    
+    CGSize subTitleSize = [self.subTitleLabel sizeThatFits:subTitleTextMaxSize];
+    self.subTitleLabel.frame = CGRectMake(5, CGRectGetMaxY(self.titleLabel.frame) + 5, maxWidth, subTitleSize.height);
+    
+    self.separateLine.frame = CGRectMake(CGRectGetMaxX(self.titleLabel.frame) + 5, 15, 0.5, 40);
+    
+    self.separateLineBottom.frame = CGRectMake(0, CGRectGetMaxY(self.subTitleLabel.frame) + 5, CGRectGetWidth(self.frame), 0.5);
+
+    CGFloat mainViewWidth = screenWidth - 60;
+    self.navigationButton.frame = CGRectMake(mainViewWidth - 48, 0, 48, 64);
+    
+    self.sureButton.frame = CGRectMake(0, CGRectGetMaxY(self.separateLineBottom.frame), mainViewWidth , 33);
+    
+    self.frame = CGRectMake(0, 0, mainViewWidth, CGRectGetHeight(self.titleLabel.frame) + CGRectGetHeight(self.subTitleLabel.frame) + CGRectGetHeight(self.sureButton.frame) + 15);
+}
+
+#pragma mark - 按钮点击方法
+- (void)clickNagivationButton
+{
+    if ([self.delegate respondsToSelector:@selector(didClickView:withButtonWithType:)])
+    {
+        [self.delegate didClickView:self withButtonWithType:CalloutViewButtonTypeNavigation];
+    }
+}
+
+- (void)sureSelectCloudStore
+{
+    if ([self.delegate respondsToSelector:@selector(didClickView:withButtonWithType:)])
+    {
+        [self.delegate didClickView:self withButtonWithType:CalloutViewButtonTypeSure];
+    }
+}
+
+@end

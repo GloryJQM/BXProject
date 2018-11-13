@@ -1,0 +1,13 @@
+//
+//  PayTitleView.h
+//  SmallCEO
+//
+//  Created by 任成龙 on 2017/9/27.
+//  Copyright © 2017年 lemuji. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface PayTitleView : UIImageView
+- (instancetype)initWithY:(CGFloat)y Pay_info:(NSDictionary *)pay_info;
+@end

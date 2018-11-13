@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 149
+/bxup_ios/!svn/ver/4/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/libQQSDK/TencentOpenAPI.framework/Headers
+END
+TencentApiInterface.h
+K 25
+svn:wc:ra_dav:version-url
+V 171
+/bxup_ios/!svn/ver/4/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/libQQSDK/TencentOpenAPI.framework/Headers/TencentApiInterface.h
+END
+QQApiInterface.h
+K 25
+svn:wc:ra_dav:version-url
+V 166
+/bxup_ios/!svn/ver/4/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/libQQSDK/TencentOpenAPI.framework/Headers/QQApiInterface.h
+END
+TencentMessageObject.h
+K 25
+svn:wc:ra_dav:version-url
+V 172
+/bxup_ios/!svn/ver/4/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/libQQSDK/TencentOpenAPI.framework/Headers/TencentMessageObject.h
+END
+WeiBoAPI.h
+K 25
+svn:wc:ra_dav:version-url
+V 160
+/bxup_ios/!svn/ver/4/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/libQQSDK/TencentOpenAPI.framework/Headers/WeiBoAPI.h
+END
+sdkdef.h
+K 25
+svn:wc:ra_dav:version-url
+V 158
+/bxup_ios/!svn/ver/4/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/libQQSDK/TencentOpenAPI.framework/Headers/sdkdef.h
+END
+TencentOAuth.h
+K 25
+svn:wc:ra_dav:version-url
+V 164
+/bxup_ios/!svn/ver/4/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/libQQSDK/TencentOpenAPI.framework/Headers/TencentOAuth.h
+END
+QQApiInterfaceObject.h
+K 25
+svn:wc:ra_dav:version-url
+V 172
+/bxup_ios/!svn/ver/4/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/libQQSDK/TencentOpenAPI.framework/Headers/QQApiInterfaceObject.h
+END
+TencentOAuthObject.h
+K 25
+svn:wc:ra_dav:version-url
+V 170
+/bxup_ios/!svn/ver/4/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/libQQSDK/TencentOpenAPI.framework/Headers/TencentOAuthObject.h
+END

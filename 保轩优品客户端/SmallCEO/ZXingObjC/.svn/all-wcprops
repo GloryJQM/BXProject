@@ -1,0 +1,209 @@
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC
+END
+ZXBarcodeFormat.h
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXBarcodeFormat.h
+END
+ZXEncodeHints.m
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXEncodeHints.m
+END
+ZXingObjC.h
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXingObjC.h
+END
+ZXResultMetadataType.h
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXResultMetadataType.h
+END
+ZXMultiFormatReader.h
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXMultiFormatReader.h
+END
+ZXRGBLuminanceSource.h
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXRGBLuminanceSource.h
+END
+ZXDecodeHints.h
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXDecodeHints.h
+END
+ZXMultiFormatReader.m
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXMultiFormatReader.m
+END
+ZXRGBLuminanceSource.m
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXRGBLuminanceSource.m
+END
+ZXInvertedLuminanceSource.h
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXInvertedLuminanceSource.h
+END
+ZXDecodeHints.m
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXDecodeHints.m
+END
+ZXMultiFormatWriter.h
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXMultiFormatWriter.h
+END
+ZXReader.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXReader.h
+END
+ZXInvertedLuminanceSource.m
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXInvertedLuminanceSource.m
+END
+ZXMultiFormatWriter.m
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXMultiFormatWriter.m
+END
+ZXErrors.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXErrors.h
+END
+ZXWriter.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXWriter.h
+END
+ZXResult.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXResult.h
+END
+ZXBinaryBitmap.h
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXBinaryBitmap.h
+END
+ZXErrors.m
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXErrors.m
+END
+ZXResult.m
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXResult.m
+END
+ZXBinarizer.h
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXBinarizer.h
+END
+ZXDimension.h
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXDimension.h
+END
+ZXBinaryBitmap.m
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXBinaryBitmap.m
+END
+ZXResultPoint.h
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXResultPoint.h
+END
+ZXBinarizer.m
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXBinarizer.m
+END
+ZXDimension.m
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXDimension.m
+END
+ZXLuminanceSource.h
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXLuminanceSource.h
+END
+ZXResultPoint.m
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXResultPoint.m
+END
+ZXPlanarYUVLuminanceSource.h
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXPlanarYUVLuminanceSource.h
+END
+ZXLuminanceSource.m
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXLuminanceSource.m
+END
+ZXPlanarYUVLuminanceSource.m
+K 25
+svn:wc:ra_dav:version-url
+V 132
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXPlanarYUVLuminanceSource.m
+END
+ZXEncodeHints.h
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXEncodeHints.h
+END
+ZXResultPointCallback.h
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/ZXResultPointCallback.h
+END

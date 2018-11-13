@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/decoder
+END
+ZXQRCodeDecoder.m
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/decoder/ZXQRCodeDecoder.m
+END
+ZXErrorCorrectionLevel.h
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/decoder/ZXErrorCorrectionLevel.h
+END
+ZXQRCodeDecodedBitStreamParser.h
+K 25
+svn:wc:ra_dav:version-url
+V 151
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/decoder/ZXQRCodeDecodedBitStreamParser.h
+END
+ZXQRCodeBitMatrixParser.h
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/decoder/ZXQRCodeBitMatrixParser.h
+END
+ZXErrorCorrectionLevel.m
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/decoder/ZXErrorCorrectionLevel.m
+END
+ZXQRCodeDecodedBitStreamParser.m
+K 25
+svn:wc:ra_dav:version-url
+V 151
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/decoder/ZXQRCodeDecodedBitStreamParser.m
+END
+ZXQRCodeDataBlock.h
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/decoder/ZXQRCodeDataBlock.h
+END
+ZXQRCodeBitMatrixParser.m
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/decoder/ZXQRCodeBitMatrixParser.m
+END
+ZXQRCodeVersion.h
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/decoder/ZXQRCodeVersion.h
+END
+ZXMode.h
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/decoder/ZXMode.h
+END
+ZXDataMask.h
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/decoder/ZXDataMask.h
+END
+ZXQRCodeDataBlock.m
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/decoder/ZXQRCodeDataBlock.m
+END
+ZXQRCodeVersion.m
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/decoder/ZXQRCodeVersion.m
+END
+ZXMode.m
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/decoder/ZXMode.m
+END
+ZXDataMask.m
+K 25
+svn:wc:ra_dav:version-url
+V 131
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/decoder/ZXDataMask.m
+END
+ZXFormatInformation.h
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/decoder/ZXFormatInformation.h
+END
+ZXQRCodeDecoder.h
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/decoder/ZXQRCodeDecoder.h
+END
+ZXFormatInformation.m
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/decoder/ZXFormatInformation.m
+END

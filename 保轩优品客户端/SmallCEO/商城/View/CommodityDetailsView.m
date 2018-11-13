@@ -1,0 +1,111 @@
+//
+//  CommodityDetailsView.m
+//  SmallCEO
+//
+//  Created by 任成龙 on 2017/7/3.
+//  Copyright © 2017年 lemuji. All rights reserved.
+//
+
+#import "CommodityDetailsView.h"
+@interface CommodityDetailsView(){
+    CGFloat _y;
+}
+@property (nonatomic, strong) UILabel *pro_subject;
+@property (nonatomic, strong) UILabel *gonghuo_price;
+@property (nonatomic, strong) UILabel *buyNum;
+@end
+@implementation CommodityDetailsView
+- (instancetype)initWithY:(CGFloat)y DataDic:(NSDictionary *)dataDic {
+    self = [super initWithFrame:CGRectMake(0, y, UI_SCREEN_WIDTH, 100)];
+    if (self) {
+        self.backgroundColor = [UIColor whiteColor];
+        _y = y;
+        [self creationView:dataDic];
+    }
+    return self;
+}
+
+- (void)creationView:(NSDictionary *)dataDic {
+    NSString *is_point_type = [NSString stringWithFormat:@"%@", dataDic[@"is_point_type"]];
+    
+    self.pro_subject=[[UILabel alloc] initWithFrame:CGRectMake(15, 10, UI_SCREEN_WIDTH - 30, 20)];
+    _pro_subject.textColor = Color0E0E0E;
+    _pro_subject.numberOfLines = 0;
+    _pro_subject.font=[UIFont systemFontOfSize:16];
+    _pro_subject.text = [NSString stringWithFormat:@"%@", dataDic[@"pro_subject"]];
+    CGSize titleSize = [_pro_subject sizeThatFits:CGSizeMake(UI_SCREEN_WIDTH - 30, FLT_MAX)];
+    _pro_subject.frame = CGRectMake(15, 10, UI_SCREEN_WIDTH - 30, titleSize.height);
+    [self addSubview:_pro_subject];
+    
+    self.gonghuo_price = [[UILabel alloc] initWithFrame:CGRectMake(_pro_subject.minX, _pro_subject.maxY + 24, UI_SCREEN_WIDTH - 120, 25)];
+    _gonghuo_price.font = [UIFont boldSystemFontOfSize:22];
+    _gonghuo_price.textAlignment = NSTextAlignmentLeft;
+    _gonghuo_price.textColor = ColorD0011B;
+    [self addSubview:_gonghuo_price];
+    
+    self.buyNum = [[UILabel alloc] initWithFrame:CGRectMake(UI_SCREEN_WIDTH - 100, _pro_subject.maxY + 24, 85, 25)];
+    _buyNum.font = [UIFont boldSystemFontOfSize:12];
+    _buyNum.textAlignment = NSTextAlignmentRight;
+    _buyNum.textColor = Color74828B;
+    [self addSubview:_buyNum];
+
+    NSString *gonghuo_price = [NSString stringWithFormat:@"%@", dataDic[@"gonghuo_price"]];
+    if ([is_point_type isEqualToString:@"1"]) {
+        
+        NSString *goods_price = [NSString stringWithFormat:@"%.f", [gonghuo_price floatValue]];
+//        NSMutableAttributedString *attr = [[NSMutableAttributedString alloc] initWithString:[goods_price moneyPoint:1]];
+//        NSRange range = [[goods_price moneyPoint:1] rangeOfString:@"积分"];
+//        [attr addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:13] range:range];
+        _gonghuo_price.text = [goods_price moneyPoint:2];
+        
+        _buyNum.text = [NSString stringWithFormat:@"已兑换 %@", dataDic[@"buyNum"]];
+        self.frame = CGRectMake(0, _y, UI_SCREEN_WIDTH, _gonghuo_price.maxY + 20);
+    }else {
+        _gonghuo_price.text = [gonghuo_price money];
+        _buyNum.text = [NSString stringWithFormat:@"已售 %@", dataDic[@"buyNum"]];
+    }
+    
+    NSArray *gift_epAry = dataDic[@"goods_tags"];
+    
+    CGFloat minX = _gonghuo_price.minX;
+    CGFloat maxY = _gonghuo_price.maxY + 18;
+    if ([gift_epAry isKindOfClass:[NSArray class]] && gift_epAry != nil) {
+        for (int i = 0; i < gift_epAry.count; i++) {
+            NSDictionary *giftDic = gift_epAry[i];
+            UILabel *label1 = [[UILabel alloc] initWithFrame:CGRectMake(minX, _gonghuo_price.maxY + 18, 0, 0)];
+            label1.layer.borderColor = [UIColor colorFromHexCode:giftDic[@"bdcolor"]].CGColor;
+            label1.textColor = [UIColor colorFromHexCode:giftDic[@"color"]];
+            label1.textAlignment = NSTextAlignmentCenter;
+            label1.font = [UIFont systemFontOfSize:12];
+            label1.layer.borderWidth = 0.5;
+            label1.layer.cornerRadius = 2;
+            label1.layer.masksToBounds = YES;
+            label1.text = [NSString stringWithFormat:@"%@", giftDic[@"text"]];
+            CGSize sizeForCardHolderLabel = [label1 sizeThatFits:CGSizeMake(UI_SCREEN_WIDTH - 90, 20)];
+            if ([label1.text isBlankString]) {
+                label1.frame = CGRectMake(minX, _gonghuo_price.maxY + 18, sizeForCardHolderLabel.width + 10, 20);
+                minX = label1.maxX + 10;
+                maxY = label1.maxY + 18;
+            }
+            [self addSubview: label1];
+        }
+    }else {
+        maxY = _gonghuo_price.maxY + 18;
+    }
+    
+    
+    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, maxY, UI_SCREEN_WIDTH, 50)];
+    view.backgroundColor = WHITE_COLOR2;
+    [self addSubview:view];
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 15, UI_SCREEN_WIDTH, 20)];
+    titleLabel.text = @"———— 商品详情 ————";
+    titleLabel.font = [UIFont systemFontOfSize:14];
+    titleLabel.textColor = [UIColor lightGrayColor];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    [view addSubview:titleLabel];
+    
+    self.frame = CGRectMake(0, _y, UI_SCREEN_WIDTH,view.maxY + 10);
+}
+
+@end

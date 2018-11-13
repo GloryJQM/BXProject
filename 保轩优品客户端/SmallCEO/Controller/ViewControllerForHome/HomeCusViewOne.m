@@ -1,0 +1,842 @@
+//
+//  HomeCusViewOne.m
+//  WanHao
+//
+//  Created by Cai on 14-6-9.
+//  Copyright (c) 2014年 wuxiaohui. All rights reserved.
+//
+
+#import "HomeCusViewOne.h"
+
+#define S_Height  145.0
+
+
+
+
+#define row_width 16.0/4.0
+
+
+
+#define Item_Height (145.0*adapterFactor)
+#define Item_Width  ((UI_SCREEN_WIDTH-16)/3.0)
+
+
+#define CUR_Btn_Tag     100
+
+#define smallItem_Width 145.0
+
+#define smallItem_Heigth 68.5
+
+
+@implementation HomeCusViewOne
+@synthesize _clockTickers,countdownRecord,countIndexArr;
+
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        // Initialization code
+        
+        self.backgroundColor = [UIColor clearColor];
+
+    }
+    return self;
+}
+
+-(id)initWithFrame:(CGRect)frame Items:(NSDictionary *)itemdic
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        // Initialization code
+//        self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor =[UIColor colorFromHexCode:@"#eeeeee"];
+        
+        if (![[itemdic objectForKey:@"content"] isKindOfClass:[NSArray class]]) {
+            return self;
+        }
+        NSArray *contentarr = [[NSArray alloc] initWithArray:[itemdic objectForKey:@"content"]];
+    
+        //_clockTickers存放的是以数组形式组装一起的时、分、秒的一个个SBTickerView对象  countdownRecord存放的是每一个SBTickerView对象对应的倒计时的时间
+        self._clockTickers = [[NSMutableArray alloc] init];
+        self.countdownRecord = [[NSMutableArray alloc] init];
+        self.countIndexArr = [[NSMutableArray alloc] init];
+
+        
+        countViewArray = [[NSMutableArray alloc] initWithCapacity:0];
+        
+        
+        contentview0 = [[UIView alloc] initWithFrame:CGRectMake(row_width, 1.0, Item_Width, Item_Height-7.0+5.0)];
+        contentview0.backgroundColor = [UIColor clearColor];
+        [self addSubview:contentview0];
+        
+        UIButton *itemBtn0 = [UIButton buttonWithType:UIButtonTypeCustom];
+        itemBtn0.frame = CGRectMake(0.0, 0.0, contentview0.frame.size.width, contentview0.frame.size.height);
+        itemBtn0.backgroundColor = [UIColor clearColor];
+        [itemBtn0 addTarget:self action:@selector(itemBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+        itemBtn0.tag = CUR_Btn_Tag + 0;
+        [contentview0 addSubview:itemBtn0];
+        
+//        UIView *temp1=[[UIView alloc] initWithFrame:CGRectMake((Item_Width-80.0)/2.0, 0.0+5.0, Item_Width+20, 125)];
+        
+//        _itemImg0 = [[UIImageView alloc] initWithFrame:CGRectMake((Item_Width-80.0)/2.0, 0.0+5.0,80.0, 80.0)];
+//        _itemImg0 = [[UIImageView alloc] initWithFrame:CGRectMake((Item_Width-80.0)/2.0, 0.0+30.0,80.0, 80.0)];
+        _itemImg0 = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0+22.0,contentview0.frame.size.width, contentview0.frame.size.height-22.0)];
+        _itemImg0.backgroundColor = [UIColor clearColor];
+//        _itemImg0.contentMode=UIViewContentModeScaleAspectFit;
+        [contentview0 addSubview:_itemImg0];
+//        _itemImg0.contentMode = UIViewContentModeScaleAspectFit;
+        
+//        _itemnameLab0 = [[UILabel alloc] initWithFrame:CGRectMake(0, Item_Height-7.0-20.0-3.0, Item_Width, 20.0)];
+        _itemnameLab0 = [[UILabel alloc] initWithFrame:CGRectMake(0, 5.0-3.0, Item_Width, 20.0)];
+//        _itemnameLab0.text = @"特色水果生日蛋糕";
+        _itemnameLab0.font = [UIFont systemFontOfSize:14.0];
+        _itemnameLab0.textAlignment = NSTextAlignmentCenter;
+        _itemnameLab0.textColor = [UIColor blackColor];
+        _itemnameLab0.backgroundColor = [UIColor clearColor];
+        _itemnameLab0.textColor = [UIColor colorFromHexCode:@"#F87C31"];
+        [contentview0 addSubview:_itemnameLab0];
+        
+        
+        _itemNowPLab0 = [[UILabel alloc] initWithFrame:CGRectMake(10.0, Item_Height-7.0-20.0-2.0-20.0, 40, 20.0)];
+        //_itemNowPLab0.text = @"¥129";
+        _itemNowPLab0.font = [UIFont systemFontOfSize:12.0];
+        _itemNowPLab0.textAlignment = NSTextAlignmentCenter;
+        _itemNowPLab0.textColor = [UIColor colorFromHexCode:@"#ff6600"];
+        _itemNowPLab0.backgroundColor = [UIColor clearColor];
+        [contentview0 addSubview:_itemNowPLab0];
+        
+        _itemOldPLab0 = [[StrikeThroughLabel alloc] initWithFrame:CGRectMake(_itemNowPLab0.frame.size.width+_itemNowPLab0.frame.origin.x, Item_Height-7.0-20.0-2.0-20.0+2.0, 30.0,15.0)];
+        _itemOldPLab0.backgroundColor = [UIColor clearColor];
+        _itemOldPLab0.strikeThroughEnabled = YES;
+        _itemOldPLab0.textColor = [UIColor lightGrayColor];
+        _itemOldPLab0.font = [UIFont systemFontOfSize:8.0];
+        [contentview0 addSubview:_itemOldPLab0];
+        
+        countdownview0 = [[UIView alloc] initWithFrame:CGRectMake(0, contentview0.frame.size.height-20.0, Item_Width, 20.0)];
+        countdownview0.backgroundColor = [UIColor clearColor];
+        [contentview0 addSubview:countdownview0];
+        [countViewArray addObject:countdownview0];
+        //[self addCountDownView:CGRectMake(12, 90, 20, 20) superView:contentview0 countdown:@"111111"];
+        
+//        _itemOldPLab0 = [[UILabel alloc] initWithFrame:CGRectMake(_itemNowPLab0.frame.size.width+_itemNowPLab0.frame.origin.x, Item_Height-60+2.0, 30.0,15.0)];
+//        _itemOldPLab0.text = @"¥132";
+//        _itemOldPLab0.font = [UIFont systemFontOfSize:8.0];
+//        _itemOldPLab0.textAlignment = NSTextAlignmentCenter;
+//        _itemOldPLab0.textColor = [UIColor lightGrayColor];
+//        [contentview0 addSubview:_itemOldPLab0];
+        
+       
+        
+        if (contentarr.count == 2) {
+            contentview1 = [[UIView alloc] initWithFrame:CGRectMake(contentview0.frame.size.width+contentview0.frame.origin.x+row_width, 1.0, Item_Width, Item_Height-7.0+5.0)];
+            contentview1.backgroundColor = [UIColor clearColor];
+            [self addSubview:contentview1];
+            
+            UIButton *itemBtn1 = [UIButton buttonWithType:UIButtonTypeCustom];
+            itemBtn1.frame = CGRectMake(0.0, 0.0, contentview1.frame.size.width, contentview1.frame.size.height);
+            itemBtn1.backgroundColor = [UIColor clearColor];
+            [itemBtn1 addTarget:self action:@selector(itemBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+            itemBtn1.tag = CUR_Btn_Tag + 1;
+            [contentview1 addSubview:itemBtn1];
+            
+            //0, Item_Height-50, Item_Width, 20.0
+            _itemnameLab1 = [[UILabel alloc] initWithFrame:CGRectMake(0, 5-3.0, Item_Width, 20.0)];
+            //_itemnameLab1.text = @"国产凤梨";
+            _itemnameLab1.font = [UIFont systemFontOfSize:14.0];
+            _itemnameLab1.textAlignment = NSTextAlignmentCenter;
+            _itemnameLab1.backgroundColor = [UIColor clearColor];
+            _itemnameLab1.textColor = [UIColor colorFromHexCode:@"#F87C31"];
+            [contentview1 addSubview:_itemnameLab1];
+            
+            
+            //10.0, Item_Height-70, 40, 20.0
+            _itemNowPLab1 = [[UILabel alloc] initWithFrame:CGRectMake(10.0, Item_Height-7.0-20.0-2.0-20.0, 40, 20.0)];
+            //_itemNowPLab1.text = @"¥8";
+            _itemNowPLab1.textColor = [UIColor colorFromHexCode:@"#ff6600"];
+            _itemNowPLab1.font = [UIFont systemFontOfSize:12.0];
+            _itemNowPLab1.backgroundColor = [UIColor clearColor];
+            [contentview1 addSubview:_itemNowPLab1];
+            
+            //_itemNowPLab1.frame.size.width+_itemNowPLab1.frame.origin.x, Item_Height-60+2.0, 30.0,15.0
+            _itemOldPLab1 = [[StrikeThroughLabel alloc] initWithFrame:CGRectMake(_itemNowPLab1.frame.size.width+_itemNowPLab1.frame.origin.x, Item_Height-7.0-20.0-2.0-20.0+2.0, 30.0,15.0)];
+            _itemOldPLab1.backgroundColor = [UIColor clearColor];
+            _itemOldPLab1.strikeThroughEnabled = YES;
+            _itemOldPLab1.textColor = [UIColor lightGrayColor];
+            _itemOldPLab1.font = [UIFont systemFontOfSize:8.0];
+            [contentview1 addSubview:_itemOldPLab1];
+            
+
+           
+            //(Item_Width-80.0)/2.0, 0.0,80.0, 80.0)
+//            _itemImg1 = [[UIImageView alloc] initWithFrame:CGRectMake((Item_Width-80.0)/2.0, 30,80.0, 80.0)];
+            _itemImg1 = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0+22.0,contentview1.frame.size.width, contentview1.frame.size.height-22.0)];
+            _itemImg1.backgroundColor = [UIColor clearColor];
+//            _itemImg1.contentMode=UIViewContentModeScaleAspectFit;
+            [contentview1 addSubview:_itemImg1];
+//            _itemImg1.contentMode = UIViewContentModeScaleAspectFit;
+            
+            
+//            [self addCountDownView:CGRectMake(12, 90, 20, 20) superView:contentview1 countdown:@"111108"];
+        }else if (contentarr.count == 3)
+        {
+        
+            contentview1 = [[UIView alloc] initWithFrame:CGRectMake(contentview0.frame.size.width+contentview0.frame.origin.x+row_width,1.0, Item_Width, Item_Height-7.0+5.0)];
+            contentview1.backgroundColor = [UIColor clearColor];
+            [self addSubview:contentview1];
+            
+            UIButton *itemBtn1 = [UIButton buttonWithType:UIButtonTypeCustom];
+            itemBtn1.frame = CGRectMake(0.0, 0.0, contentview1.frame.size.width, contentview1.frame.size.height);
+            itemBtn1.backgroundColor = [UIColor clearColor];
+            [itemBtn1 addTarget:self action:@selector(itemBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+            itemBtn1.tag = CUR_Btn_Tag + 1;
+            [contentview1 addSubview:itemBtn1];
+            
+            
+            _itemnameLab1 = [[UILabel alloc] initWithFrame:CGRectMake(0, 5-3.0, Item_Width, 20.0)];
+            //_itemnameLab1.text = @"国产凤梨";
+            _itemnameLab1.font = [UIFont systemFontOfSize:14.0];
+            _itemnameLab1.textAlignment = NSTextAlignmentCenter;
+            _itemnameLab1.backgroundColor = [UIColor clearColor];
+            _itemNowPLab1.lineBreakMode = NSLineBreakByWordWrapping;
+            _itemnameLab1.textColor = [UIColor colorFromHexCode:@"#F87C31"];
+            [contentview1 addSubview:_itemnameLab1];
+            
+            
+            _itemNowPLab1 = [[UILabel alloc] initWithFrame:CGRectMake(10.0, Item_Height-7.0-20.0-2.0-20.0, 40, 20.0)];
+            //_itemNowPLab1.text = @"¥8";
+            _itemNowPLab1.textColor = [UIColor colorFromHexCode:@"#ff6600"];
+            _itemNowPLab1.font = [UIFont systemFontOfSize:12.0];
+            _itemNowPLab1.backgroundColor = [UIColor clearColor];
+            [contentview1 addSubview:_itemNowPLab1];
+            
+            _itemOldPLab1 = [[StrikeThroughLabel alloc] initWithFrame:CGRectMake(_itemNowPLab1.frame.size.width+_itemNowPLab1.frame.origin.x, Item_Height-7.0-20.0-2.0-20.0+2.0, 30.0,15.0)];
+            _itemOldPLab1.backgroundColor = [UIColor clearColor];
+            _itemOldPLab1.strikeThroughEnabled = YES;
+            _itemOldPLab1.textColor = [UIColor lightGrayColor];
+            _itemOldPLab1.font = [UIFont systemFontOfSize:8.0];
+            [contentview1 addSubview:_itemOldPLab1];
+            
+//            _itemOldPLab1 = [[UILabel alloc] initWithFrame:CGRectMake(_itemNowPLab1.frame.size.width+_itemNowPLab1.frame.origin.x, Item_Height-60+2.0, 30.0,15.0)];
+//            _itemOldPLab1.text = @"¥10";
+//            _itemOldPLab1.textColor = [UIColor lightGrayColor];
+//            _itemOldPLab1.font = [UIFont systemFontOfSize:8.0];
+//            _itemOldPLab1.backgroundColor = [UIColor clearColor];
+//            [contentview1 addSubview:_itemOldPLab1];
+            
+//            _itemImg1 = [[UIImageView alloc] initWithFrame:CGRectMake((Item_Width-80.0)/2.0, 30,80.0, 80.0)];
+            _itemImg1 = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0+22.0,contentview1.frame.size.width, contentview1.frame.size.height-22.0)];
+            _itemImg1.backgroundColor = [UIColor clearColor];
+//            _itemImg1.contentMode=UIViewContentModeScaleAspectFit;
+            [contentview1 addSubview:_itemImg1];
+            
+//            _itemImg1.contentMode = UIViewContentModeScaleAspectFit;
+            
+//            [self addCountDownView:CGRectMake(12, 90, 20, 20) superView:contentview1 countdown:@"111108"];
+            
+//            countdownview1 = [[UIView alloc] initWithFrame:CGRectMake(0, 90, Item_Width, 20.0)];
+//            countdownview1.backgroundColor = [UIColor redColor];
+//            [contentview1 addSubview:countdownview1];
+//            [countViewArray addObject:countdownview1];
+            
+            contentview2 = [[UIView alloc] initWithFrame:CGRectMake(contentview1.frame.size.width+contentview1.frame.origin.x+row_width, 1.0, Item_Width, Item_Height-7.0+5.0)];
+            contentview2.backgroundColor = [UIColor clearColor];
+            [self addSubview:contentview2];
+            
+            UIButton *itemBtn2 = [UIButton buttonWithType:UIButtonTypeCustom];
+            itemBtn2.frame = CGRectMake(0.0, 0.0, contentview2.frame.size.width, contentview2.frame.size.height);
+            itemBtn2.backgroundColor = [UIColor clearColor];
+            [itemBtn2 addTarget:self action:@selector(itemBtnClick:) forControlEvents:UIControlEventTouchUpInside];
+            itemBtn2.tag = CUR_Btn_Tag + 2;
+            [contentview2 addSubview:itemBtn2];
+            
+            //0, Item_Height-40, Item_Width-1.0,20
+            _itemnameLab2 = [[UILabel alloc] initWithFrame:CGRectMake(0, 5-3.0, Item_Width-1.0,20)];
+            _itemnameLab2.backgroundColor = [UIColor clearColor];
+            //_itemnameLab2.text = @"新鲜蔬菜";
+            _itemnameLab2.font = [UIFont systemFontOfSize:14.0];
+            _itemnameLab2.textAlignment = NSTextAlignmentCenter;
+            _itemnameLab2.lineBreakMode = NSLineBreakByWordWrapping;
+            _itemnameLab2.textColor = [UIColor colorFromHexCode:@"#F87C31"];
+            [contentview2 addSubview:_itemnameLab2];
+            
+            
+            //10.0, Item_Height-60, 40, 20.0
+            _itemNowPLab2 = [[UILabel alloc] initWithFrame:CGRectMake(10.0, Item_Height-7.0-20.0-2.0-20.0, 40, 20.0)];
+            //_itemNowPLab2.text = @"¥2.2";
+            _itemNowPLab2.textColor = [UIColor colorFromHexCode: @"#ff6600"];
+            _itemNowPLab2.font = [UIFont systemFontOfSize:12.0];
+            _itemNowPLab2.backgroundColor = [UIColor clearColor];
+            [contentview2 addSubview:_itemNowPLab2];
+            
+            //_itemNowPLab2.frame.size.width+_itemNowPLab2.frame.origin.x, Item_Height-60+2.0, 30.0,15.0
+            _itemOldPLab2 = [[StrikeThroughLabel alloc] initWithFrame:CGRectMake(_itemNowPLab2.frame.size.width+_itemNowPLab2.frame.origin.x, Item_Height-7.0-20.0-2.0-20.0+2.0, 30.0,15.0)];
+            _itemOldPLab2.backgroundColor = [UIColor clearColor];
+            _itemOldPLab2.strikeThroughEnabled = YES;
+            _itemOldPLab2.textColor = [UIColor lightGrayColor];
+            _itemOldPLab2.font = [UIFont systemFontOfSize:8.0];
+            [contentview2 addSubview:_itemOldPLab2];
+            
+//            _itemOldPLab2 = [[UILabel alloc] initWithFrame:CGRectMake(_itemNowPLab2.frame.size.width+_itemNowPLab2.frame.origin.x, Item_Height-60+2.0, 30.0,15.0)];
+//            _itemOldPLab2.text = @"¥2.5";
+//            _itemOldPLab2.textColor = [UIColor lightGrayColor];
+//            _itemOldPLab2.font = [UIFont systemFontOfSize:8.0];
+//            [contentview2 addSubview:_itemOldPLab2];
+            
+
+            //(Item_Width-80.0)/2.0, 0.0,80.0, 80.0)
+//            _itemImg2 = [[UIImageView alloc] initWithFrame:CGRectMake((Item_Width-80.0)/2.0, 30,80.0, 80.0)];
+             _itemImg2 = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0+22.0,contentview2.frame.size.width, contentview2.frame.size.height-22.0)];
+            _itemImg2.backgroundColor = [UIColor clearColor];
+//            _itemImg2.contentMode=UIViewContentModeScaleAspectFit;
+            [contentview2 addSubview:_itemImg2];
+//            _itemImg2.contentMode = UIViewContentModeScaleAspectFit;
+            
+//            countdownview2 = [[UIView alloc] initWithFrame:CGRectMake(0, 90, Item_Width, 20.0)];
+//            countdownview2.backgroundColor = [UIColor redColor];
+//            [contentview2 addSubview:countdownview2];
+//            [countViewArray addObject:countdownview2];
+//            [self addCountDownView:CGRectMake(12, 90, 20, 20) superView:contentview2 countdown:@"111120"];
+        }
+        
+        
+        countdownview1 = [[UIView alloc] initWithFrame:CGRectMake(0, contentview1.frame.size.height-20.0, Item_Width, 20.0)];
+        countdownview1.backgroundColor = [UIColor clearColor];
+        [contentview1 addSubview:countdownview1];
+        [countViewArray addObject:countdownview1];
+        
+        countdownview2 = [[UIView alloc] initWithFrame:CGRectMake(0, contentview2.frame.size.height-20.0, Item_Width, 20.0)];
+        countdownview2.backgroundColor = [UIColor clearColor];
+        [contentview2 addSubview:countdownview2];
+        [countViewArray addObject:countdownview2];
+        
+        
+        
+    }
+    return self;
+}
+
+-(void)itemBtnClick:(UIButton *)clickbtn
+{
+    if ([self.cusfirstDelegate respondsToSelector:@selector(cusfirstitemButton:CurView:)]) {
+        [self.cusfirstDelegate cusfirstitemButton:clickbtn CurView:self];
+    }
+    
+}
+
+
+
+-(void)firstViewLaodDatas:(NSDictionary *)tempDic
+{
+    NSArray *temparr = [NSArray arrayWithArray:[tempDic objectForKey:@"content"]];
+
+    if (![[tempDic objectForKey:@"content"] isKindOfClass:[NSArray class]]) {
+        return;
+    }
+    NSArray *contentArr = [tempDic objectForKey:@"content"];
+    if (contentArr.count == 0) {
+        return;
+    }
+    NSString *name0 = [[[tempDic objectForKey:@"content"] objectAtIndex:0] objectForKey:@"title"];
+    NSString *temp1 = [[[tempDic objectForKey:@"content"] objectAtIndex:1] objectForKey:@"title"];
+    NSString *temp2 = [[[tempDic objectForKey:@"content"] objectAtIndex:2] objectForKey:@"title"];
+    if (name0.length==0&&temp1.length==0&&temp2.length==0) {
+        CGRect rect;
+        rect=contentview0.frame;
+        rect.origin.y=-22;
+        contentview0.frame=rect;
+        
+        rect=contentview1.frame;
+        rect.origin.y=-22;
+        contentview1.frame=rect;
+        
+        rect=contentview2.frame;
+        rect.origin.y=-22;
+        contentview2.frame=rect;
+        
+        
+        rect=self.frame;
+        rect.size.height=145*adapterFactor-22;
+        self.frame=rect;
+        
+        self.clipsToBounds=YES;
+    }
+    else{
+        CGRect rect;
+        rect=contentview0.frame;
+        rect.origin.y=0;
+        contentview0.frame=rect;
+        
+        rect=contentview1.frame;
+        rect.origin.y=0;
+        contentview1.frame=rect;
+        
+        rect=contentview2.frame;
+        rect.origin.y=0;
+        contentview2.frame=rect;
+        
+        
+        rect=self.frame;
+        rect.size.height=145*adapterFactor;
+        self.frame=rect;
+        
+        self.clipsToBounds=YES;
+    }
+    if (name0.length > 7) {
+        NSString *subname0 = [NSString stringWithFormat:@"%@",[name0 substringToIndex:7]];
+        _itemnameLab0.text = subname0;
+    }else{
+        if (name0.length==0) {
+            
+
+//            
+//            
+//            self.clipsToBounds=YES;
+            _itemnameLab0.text=@"";
+            
+        }
+        else{
+            _itemnameLab0.text = [[[tempDic objectForKey:@"content"] objectAtIndex:0] objectForKey:@"title"];
+        }
+        
+    }
+    /*NSString *oldpri0 = [NSString stringWithFormat:@"%@",[[[tempDic objectForKey:@"content"] objectAtIndex:0] objectForKey:@"old_price"]];
+    if (oldpri0.length > 0) {
+        _itemOldPLab0.hidden = NO;
+        _itemOldPLab0.price = [[[[tempDic objectForKey:@"content"] objectAtIndex:0] objectForKey:@"old_price"] floatValue];
+    }else{
+        _itemOldPLab0.hidden = YES;
+    }*/
+    
+//    _itemOldPLab0.text = [NSString stringWithFormat:@"￥%.1f",[[[[tempDic objectForKey:@"content"] objectAtIndex:0] objectForKey:@"old_price"] floatValue]] ;
+    
+    /*NSString *nowpri0 = [NSString stringWithFormat:@"%@",[[[tempDic objectForKey:@"content"] objectAtIndex:0] objectForKey:@"description"]];
+    if (nowpri0.length > 0) {
+        _itemNowPLab0.hidden = NO;
+        _itemNowPLab0.text = [NSString stringWithFormat:@"￥%.1f",[[[[tempDic objectForKey:@"content"] objectAtIndex:0] objectForKey:@"description"] floatValue]] ;
+    }else{
+        _itemNowPLab0.hidden = YES;
+    }*/
+    
+    NSString *icon_url0 = [NSString stringWithFormat:@"%@",[[[tempDic objectForKey:@"content"] objectAtIndex:0] objectForKey:@"picurl"]];
+    [_itemImg0 setImageWithURL:[NSURL URLWithString:icon_url0] placeholderImage:[UIImage imageNamed:@"defaultImage_202286.png"]];
+    NSString *countdown0 = [NSString stringWithFormat:@"%@",[[[tempDic objectForKey:@"content"] objectAtIndex:0] objectForKey:@"countdown"]];
+    int lefttime0 = [countdown0 intValue];
+    if (lefttime0 > 0) {
+        countdownview0.hidden = NO;
+        NSLog(@"countdown上的子视图个数：%d",countdownview0.subviews.count);
+        if (countdownview0.subviews.count == 0) {
+            [self addCountDownView:CGRectMake(12+2.0, 0, 20, 20) superView:countdownview0 countdown:countdown0 itemindex:0];
+//            [self addCountDownView:CGRectMake(12, 0, 20, 20) superView:countdownview0 countdown:@"8"];
+        }
+    }else{
+        countdownview0.hidden = YES;
+    }
+    
+    
+    if (temparr.count >= 2) {
+        NSString *name1 = [[[tempDic objectForKey:@"content"] objectAtIndex:1] objectForKey:@"title"];
+        if (name1.length > 7) {
+            NSString *subname1 = [NSString stringWithFormat:@"%@",[name1 substringToIndex:7]];
+            _itemnameLab1.text = subname1;
+        }else{
+            if (name1.length==0) {
+
+//                
+//                self.clipsToBounds=YES;
+                _itemnameLab1.text=@"";
+                
+            }
+            else{
+                _itemnameLab1.text = [[[tempDic objectForKey:@"content"] objectAtIndex:1] objectForKey:@"title"];
+            }
+        }
+        
+        /*NSString *nowpri1 = [NSString stringWithFormat:@"%@",[[[tempDic objectForKey:@"content"] objectAtIndex:1] objectForKey:@"description"]];
+        if (nowpri1.length > 0) {
+            _itemNowPLab1.hidden = NO;
+            _itemNowPLab1.text = [NSString stringWithFormat:@"￥%.1f",[[[[tempDic objectForKey:@"content"] objectAtIndex:1] objectForKey:@"description"] floatValue]] ;
+        }else{
+            _itemNowPLab1.hidden = YES;
+        }
+        
+        NSString *oldpri1 = [NSString stringWithFormat:@"%@",[[[tempDic objectForKey:@"content"] objectAtIndex:1] objectForKey:@"old_price"]];
+        if (oldpri1.length > 0) {
+            _itemOldPLab1.hidden = NO;
+            _itemOldPLab1.text = [NSString stringWithFormat:@"￥%.1f",[[[[tempDic objectForKey:@"content"] objectAtIndex:1] objectForKey:@"old_price"] floatValue]] ;
+        }else{
+            _itemOldPLab1.hidden = YES;
+        }*/
+        
+        NSString *icon_url1 = [NSString stringWithFormat:@"%@",[[[tempDic objectForKey:@"content"] objectAtIndex:1] objectForKey:@"picurl"]];
+        [_itemImg1 setImageWithURL:[NSURL URLWithString:icon_url1] placeholderImage:[UIImage imageNamed:@"defaultImage_202286.png"]];
+        NSString *countdown1 = [NSString stringWithFormat:@"%@",[[[tempDic objectForKey:@"content"] objectAtIndex:1] objectForKey:@"countdown"]];
+        int lefttime1 = [countdown1 intValue];
+        if (lefttime1 > 0) {
+            countdownview1.hidden = NO;
+            NSLog(@"countdown11上的子视图个数：%d",countdownview1.subviews.count);
+            if (countdownview1.subviews.count == 0) {
+                [self addCountDownView:CGRectMake(12, 0, 20, 20) superView:countdownview1 countdown:countdown1 itemindex:1];
+//                [self addCountDownView:CGRectMake(12, 0, 20, 20) superView:countdownview1 countdown:@"6"];
+            }
+        }else{
+            countdownview1.hidden = YES;
+        }
+    }
+    if (temparr.count == 3) {
+        NSString *name2 = [[[tempDic objectForKey:@"content"] objectAtIndex:2] objectForKey:@"title"];
+        if (name2.length > 7) {
+            NSString *subname2 = [NSString stringWithFormat:@"%@",[name2 substringToIndex:7]];
+            _itemnameLab2.text = subname2;
+        }else{
+            if (name2.length==0) {
+
+                _itemnameLab2.text=@"";
+                
+            }
+            else{
+                _itemnameLab2.text = [[[tempDic objectForKey:@"content"] objectAtIndex:2] objectForKey:@"title"];
+            }
+        }
+        /*NSString *nowpri2 = [NSString stringWithFormat:@"%@",[[[tempDic objectForKey:@"content"] objectAtIndex:2] objectForKey:@"description"]];
+        if (nowpri2.length > 0) {
+            _itemNowPLab2.hidden = NO;
+            _itemNowPLab2.text = [NSString stringWithFormat:@"￥%.1f",[[[[tempDic objectForKey:@"content"] objectAtIndex:2] objectForKey:@"description"] floatValue]] ;
+        }else{
+            _itemNowPLab2.hidden = YES;
+        }
+        
+        NSString *oldpri2 = [NSString stringWithFormat:@"%@",[[[tempDic objectForKey:@"content"] objectAtIndex:2] objectForKey:@"old_price"]];
+        if (oldpri2.length > 0) {
+            _itemOldPLab2.hidden = NO;
+            _itemOldPLab2.text = [NSString stringWithFormat:@"￥%.1f",[[[[tempDic objectForKey:@"content"] objectAtIndex:2] objectForKey:@"old_price"] floatValue]] ;
+        }else{
+            _itemOldPLab2.hidden = YES;
+        }*/
+        
+        NSString *icon_url2 = [NSString stringWithFormat:@"%@",[[[tempDic objectForKey:@"content"] objectAtIndex:2] objectForKey:@"picurl"]];
+        [_itemImg2 setImageWithURL:[NSURL URLWithString:icon_url2] placeholderImage:[UIImage imageNamed:@"defaultImage_202286.png"]];
+        
+        NSString *countdown2 = [NSString stringWithFormat:@"%@",[[[tempDic objectForKey:@"content"] objectAtIndex:2] objectForKey:@"countdown"]];
+        int lefttime2 = [countdown2 intValue];
+        if (lefttime2 > 0) {
+            countdownview2.hidden = NO;
+            NSLog(@"countdown22上的子视图个数：%d",countdownview2.subviews.count);
+            if (countdownview2.subviews.count == 0) {
+//                [self addCountDownView:CGRectMake(12, 0, 20, 20) superView:countdownview2 countdown:@"9"];
+                [self addCountDownView:CGRectMake(12, 0, 20, 20) superView:countdownview2 countdown:countdown2 itemindex:2];
+            }
+        }else{
+            countdownview2.hidden = YES;
+        }
+    }
+    
+    
+    
+    
+    
+}
+
+
+-(void)addCountDownView:(CGRect)frame superView:(UIView *)superView countdown:(NSString *)countdown itemindex:(NSInteger)itemind
+{
+    //因为倒计时还没统一加上，故先屏蔽
+    if (!_CountDownTimer) {
+        _CountDownTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(numberTick:) userInfo:nil repeats:YES];
+    }
+    
+    _currentClock = @"000000";
+    SBTickerView *clockTickerViewHour1 = [[SBTickerView alloc] initWithFrame:frame];
+    //    SBTickerView *clockTickerViewHour2 = [[SBTickerView alloc] initWithFrame:CGRectMake(frame.origin.x+20.0f, frame.origin.y, frame.size.width, frame.size.height)];
+    SBTickerView *clockTickerViewMinute1 = [[SBTickerView alloc] initWithFrame:CGRectMake(frame.origin.x+26.0f, frame.origin.y, frame.size.width, frame.size.height)];
+    //    SBTickerView *clockTickerViewMinute2 = [[SBTickerView alloc] initWithFrame:CGRectMake(frame.origin.x+60.0f, frame.origin.y, frame.size.width, frame.size.height)];
+    SBTickerView *clockTickerViewSecond1 = [[SBTickerView alloc] initWithFrame:CGRectMake(frame.origin.x+52.0f, frame.origin.y, frame.size.width, frame.size.height)];
+    //    SBTickerView *clockTickerViewSecond2 = [[SBTickerView alloc] initWithFrame:CGRectMake(frame.origin.x+100.0f, frame.origin.y, frame.size.width, frame.size.height)];
+    
+    NSArray* clockTicersInstance  = [NSArray arrayWithObjects:
+                                     clockTickerViewHour1,
+                                     //clockTickerViewHour2,
+                                     clockTickerViewMinute1,
+                                     //clockTickerViewMinute2,
+                                     clockTickerViewSecond1,
+                                     //clockTickerViewSecond2,
+                                     nil];
+    
+    [_clockTickers addObject:clockTicersInstance];
+    [countdownRecord addObject:countdown];
+    [countIndexArr addObject:[NSString stringWithFormat:@"%d",itemind]];
+    NSString* strCoutndown = [self parseCountDown:[countdown intValue]];
+    int i=0;
+    for (SBTickerView *ticker in clockTicersInstance){
+        CGRect frame = ticker.frame;
+        frame.size.width = 20.0f;
+        frame.size.height = 20.0f;
+        ticker.frame = frame;
+        
+        [ticker setFrontView:[SBTickView tickViewWithTitle:[strCoutndown substringWithRange:NSMakeRange(i*2, 2)] fontSize:14.]];
+        
+        if(i<[clockTicersInstance count]-1){
+            UILabel *timerSplitter = [[UILabel alloc] initWithFrame:CGRectMake(ticker.frame.origin.x+ticker.frame.size.width+1, frame.origin.y-2, 3, 20)];
+            [timerSplitter setText:@":"];
+            [superView addSubview:timerSplitter];
+        }
+        [superView addSubview:ticker];
+        
+        i++;
+    }
+    
+    
+    
+}
+
+- (void)numberTick:(id)sender {
+    
+    //    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    //    [formatter setDateFormat:@"HHmmss"];
+    //    NSString *newClock = [formatter stringFromDate:[NSDate date]];
+    
+    
+    [_clockTickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        int countdown = [[countdownRecord objectAtIndex:idx] intValue];
+        
+        _currentClock = [self parseCountDown:countdown];
+//        NSLog(@"当前的clock %@",_currentClock);
+        countdown--;
+        if (countdown == 0) {
+            NSDictionary *itemtempdic = [NSDictionary dictionaryWithDictionary:[_timersArray objectAtIndex:idx]];
+            UILabel *lbl_right_subtitle = (UILabel *)[itemtempdic objectForKey:@"time_rigth_titlelab"];
+            lbl_right_subtitle.hidden = NO;
+            lbl_right_subtitle.text = @"";
+            NSString *newClock = [self parseCountDown:countdown];
+            [obj enumerateObjectsUsingBlock:^(id clockobj, NSUInteger cidx, BOOL *stop) {
+                
+                [clockobj setFrontView:[SBTickView tickViewWithTitle:[newClock substringWithRange:NSMakeRange(cidx*2, 2)] fontSize:14.]];
+                
+                
+            }];
+            int index = [[NSString stringWithFormat:@"%@",[countIndexArr objectAtIndex:idx]] intValue];
+            if (index == 0) {
+                countdownview0.hidden = YES;
+            }else if (index == 1)
+            {
+                countdownview1.hidden = YES;
+            }else if (index == 2)
+            {
+                countdownview2.hidden = YES;
+            }
+
+//            if (idx == 0) {
+//                countdownview0.hidden = YES;
+//            }else if (idx == 1)
+//            {
+//                countdownview1.hidden = YES;
+//            }else if (idx == 2)
+//            {
+//                countdownview2.hidden = YES;
+//            }
+            if (countdownview0.hidden && countdownview1.hidden && countdownview2.hidden) {
+                [_CountDownTimer invalidate];
+                _CountDownTimer = nil;
+            }
+            
+            return;
+        }
+        NSString *newClock = [self parseCountDown:countdown];
+        
+        [countdownRecord replaceObjectAtIndex:idx withObject:[NSString stringWithFormat:@"%d",countdown]];
+        [obj enumerateObjectsUsingBlock:^(id clockobj, NSUInteger cidx, BOOL *stop) {
+            //            DLog(@"clock %@",newClock);
+            if (![[_currentClock substringWithRange:NSMakeRange(cidx*2, 2)] isEqualToString:[newClock substringWithRange:NSMakeRange(cidx*2, 2)]]) {
+                [clockobj setFrontView:[SBTickView tickViewWithTitle:[newClock substringWithRange:NSMakeRange(cidx*2, 2)] fontSize:14.]];
+                
+                //[clockobj setBackView:[SBTickView tickViewWithTitle:[newClock substringWithRange:NSMakeRange(cidx*2, 2)] fontSize:14.]];
+                //此方法会内存泄露
+                //[clockobj tick:SBTickerViewTickDirectionDown animated:NO completion:nil];
+            }
+        }];
+        
+        
+    }];
+    
+    //_currentClock = newClock;
+    
+}
+
+
+//- (void)numberTick:(id)sender {
+//    
+//    //    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//    //    [formatter setDateFormat:@"HHmmss"];
+//    //    NSString *newClock = [formatter stringFromDate:[NSDate date]];
+//    
+//    
+//    [_clockTickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//        int countdown = [[countdownRecord objectAtIndex:idx] intValue];
+//        
+//        _currentClock = [self parseCountDown:countdown];
+//        NSLog(@"当前的clock %@",_currentClock);
+//        countdown--;
+//        if (countdown == 0) {
+//            NSDictionary *itemtempdic = [NSDictionary dictionaryWithDictionary:[_timersArray objectAtIndex:idx]];
+//            UILabel *lbl_right_subtitle = (UILabel *)[itemtempdic objectForKey:@"time_rigth_titlelab"];
+//            lbl_right_subtitle.hidden = NO;
+//            lbl_right_subtitle.text = @"";
+//            NSString *newClock = [self parseCountDown:countdown];
+//            [obj enumerateObjectsUsingBlock:^(id clockobj, NSUInteger cidx, BOOL *stop) {
+//                
+//                [clockobj setFrontView:[SBTickView tickViewWithTitle:[newClock substringWithRange:NSMakeRange(cidx*2, 2)] fontSize:14.]];
+//                
+//                
+//            }];
+//            if (idx == 0) {
+//                countdownview0.hidden = YES;
+//            }else if (idx == 1)
+//            {
+//                countdownview1.hidden = YES;
+//            }else if (idx == 2)
+//            {
+//                countdownview2.hidden = YES;
+//            }
+//            if (countdownview0.hidden && countdownview1.hidden && countdownview2.hidden) {
+//                [_CountDownTimer invalidate];
+//                _CountDownTimer = nil;
+//            }
+//            
+//            return;
+//        }
+//        NSString *newClock = [self parseCountDown:countdown];
+//        
+//        [countdownRecord replaceObjectAtIndex:idx withObject:[NSString stringWithFormat:@"%d",countdown]];
+//        [obj enumerateObjectsUsingBlock:^(id clockobj, NSUInteger cidx, BOOL *stop) {
+//            //            DLog(@"clock %@",newClock);
+//            if (![[_currentClock substringWithRange:NSMakeRange(cidx*2, 2)] isEqualToString:[newClock substringWithRange:NSMakeRange(cidx*2, 2)]]) {
+//                [clockobj setFrontView:[SBTickView tickViewWithTitle:[newClock substringWithRange:NSMakeRange(cidx*2, 2)] fontSize:14.]];
+//                
+//                //[clockobj setBackView:[SBTickView tickViewWithTitle:[newClock substringWithRange:NSMakeRange(cidx*2, 2)] fontSize:14.]];
+//                //此方法会内存泄露
+//                //[clockobj tick:SBTickerViewTickDirectionDown animated:NO completion:nil];
+//            }
+//        }];
+//        
+//        
+//    }];
+//    
+//    //_currentClock = newClock;
+//    
+//}
+-(NSString *)parseCountDown:(int)countdown
+{
+    //DLog(@"parse countdown %d",countdown);
+    if (countdown <= 0) return @"000000";
+    
+    NSString *hour, *minute, *second;
+    int ihour = countdown / 3600;
+    int iminute = (countdown /60) % 60;
+    int isecond = countdown % 60;
+    
+    if(ihour > 9){
+        hour = [NSString stringWithFormat:@"%d",ihour];
+    }else{
+        hour = [NSString stringWithFormat:@"0%d",ihour];
+    }
+    if(iminute > 9){
+        minute = [NSString stringWithFormat:@"%d",iminute];
+    }else{
+        minute = [NSString stringWithFormat:@"0%d",iminute];
+    }
+    if(isecond > 9){
+        second = [NSString stringWithFormat:@"%d",isecond];
+    }else{
+        second = [NSString stringWithFormat:@"0%d",isecond];
+    }
+    
+    return [NSString stringWithFormat:@"%@%@%@",hour,minute,second];
+}
+
+-(void)reloadTimer
+{
+    [_clockTickers enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        int countdown = [[countdownRecord objectAtIndex:idx] intValue];
+        
+        _currentClock = [self parseCountDown:countdown];
+        if (countdown == 0) {
+            
+            NSDictionary *itemtempdic = [NSDictionary dictionaryWithDictionary:[_timersArray objectAtIndex:idx]];
+            UILabel *lbl_right_subtitle = (UILabel *)[itemtempdic objectForKey:@"time_rigth_titlelab"];
+            lbl_right_subtitle.hidden = NO;
+            lbl_right_subtitle.text = @"";
+            NSString *newClock = [self parseCountDown:countdown];
+            [obj enumerateObjectsUsingBlock:^(id clockobj, NSUInteger cidx, BOOL *stop) {
+                
+                [clockobj setFrontView:[SBTickView tickViewWithTitle:[newClock substringWithRange:NSMakeRange(cidx*2, 2)] fontSize:14.]];
+                
+                
+            }];
+            if (idx == 0) {
+                countdownview0.hidden = YES;
+            }else if (idx == 1)
+            {
+                countdownview1.hidden = YES;
+            }else if (idx == 2)
+            {
+                countdownview2.hidden = YES;
+            }
+            if (countdownview0.hidden && countdownview1.hidden && countdownview2.hidden) {
+                [_CountDownTimer invalidate];
+                _CountDownTimer = nil;
+            }
+//            [_HomeCountDownTimer invalidate];
+//            _HomeCountDownTimer = nil;
+            return;
+        }
+        NSString *newClock = [self parseCountDown:countdown];
+        //        NSLog(@"此时的倒计时%@",newClock);
+        [obj enumerateObjectsUsingBlock:^(id clockobj, NSUInteger cidx, BOOL *stop) {
+            
+            [clockobj setFrontView:[SBTickView tickViewWithTitle:[newClock substringWithRange:NSMakeRange(cidx*2, 2)] fontSize:14.]];
+            
+            
+        }];
+        
+        
+    }];
+}
+
+-(void)reloadCountDownTime:(NSDictionary *)tempDic
+{
+    NSArray *temparr = [NSArray arrayWithArray:[tempDic objectForKey:@"content"]];
+    
+    if (countdownRecord.count == 0) {
+        return;
+    }
+    for (int i = 0; i < countdownRecord.count; i++) {
+        NSString *itemindex = [NSString stringWithFormat:@"%@",[countIndexArr objectAtIndex:i]];
+        [countdownRecord replaceObjectAtIndex:i withObject:[NSString stringWithFormat:@"%@",[[[tempDic objectForKey:@"content"] objectAtIndex:[itemindex intValue]] objectForKey:@"countdown"]]];
+    }
+//    [countdownRecord replaceObjectAtIndex:0 withObject:@"10"];
+//    [countdownRecord replaceObjectAtIndex:1 withObject:@"20"];
+//    [countdownRecord replaceObjectAtIndex:2 withObject:@"15"];
+    //暂时数据没统一，故屏蔽
+    if (!_CountDownTimer) {
+        _CountDownTimer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(numberTick:) userInfo:nil repeats:YES];
+    }
+    [self reloadTimer];
+}
+
+-(void)stopCountDownTimer
+{
+    if (_CountDownTimer) {
+        [_CountDownTimer invalidate];
+        _CountDownTimer = nil;
+    }
+}
+
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect
+{
+    // Drawing code
+}
+*/
+
+@end

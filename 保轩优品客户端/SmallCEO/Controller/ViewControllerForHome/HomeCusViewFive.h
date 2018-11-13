@@ -1,0 +1,42 @@
+//
+//  HomeCusViewFive.h
+//  WanHao
+//
+//  Created by Cai on 14-6-9.
+//  Copyright (c) 2014年 wuxiaohui. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+@class HomeCusViewFive;
+@protocol HomeCusViewFiveDelegate <NSObject>
+
+-(void)cusfiveitemButton:(UIButton *)curbtn CurView:(HomeCusViewFive *)curVi;
+
+@end
+
+@interface HomeCusViewFive : UIView
+{
+    UILabel *_titleLab;
+    
+    UILabel *_kindNameLab;
+    
+    UILabel *_itemnameLab0;
+    UILabel *_itemnameLab1;
+    UILabel *_itemnameLab2;
+    
+    UIButton *_itemBtn0;
+    UIButton *_itemBtn1;
+    UIButton *_itemBtn2;
+    UIButton *_itemBtn3;
+    UIButton *_itemBtn4;
+    UIButton *_itemBtn5;
+    
+    UIImageView *_itemImg0;
+    
+    UIView *titleview;
+}
+@property(nonatomic,assign)id <HomeCusViewFiveDelegate> cusfiveDelegate;
+- (id)initWithFrame:(CGRect)frame tbackcolor:(NSString *)tcolor imgbackcolor:(NSString *)imgbackcolor contentDic:(NSDictionary *)cdic;
+-(void)fiveViewLaodDatas:(NSDictionary *)tempDic;
+
+@end

@@ -1,0 +1,83 @@
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/pdf417/encoder
+END
+ZXBarcodeRow.h
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/pdf417/encoder/ZXBarcodeRow.h
+END
+ZXPDF417ErrorCorrection.h
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/pdf417/encoder/ZXPDF417ErrorCorrection.h
+END
+ZXDimensions.h
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/pdf417/encoder/ZXDimensions.h
+END
+ZXBarcodeMatrix.m
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/pdf417/encoder/ZXBarcodeMatrix.m
+END
+ZXPDF417.m
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/pdf417/encoder/ZXPDF417.m
+END
+ZXBarcodeRow.m
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/pdf417/encoder/ZXBarcodeRow.m
+END
+ZXCompaction.h
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/pdf417/encoder/ZXCompaction.h
+END
+ZXPDF417ErrorCorrection.m
+K 25
+svn:wc:ra_dav:version-url
+V 144
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/pdf417/encoder/ZXPDF417ErrorCorrection.m
+END
+ZXDimensions.m
+K 25
+svn:wc:ra_dav:version-url
+V 133
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/pdf417/encoder/ZXDimensions.m
+END
+ZXPDF417HighLevelEncoder.h
+K 25
+svn:wc:ra_dav:version-url
+V 145
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/pdf417/encoder/ZXPDF417HighLevelEncoder.h
+END
+ZXPDF417HighLevelEncoder.m
+K 25
+svn:wc:ra_dav:version-url
+V 145
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/pdf417/encoder/ZXPDF417HighLevelEncoder.m
+END
+ZXBarcodeMatrix.h
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/pdf417/encoder/ZXBarcodeMatrix.h
+END
+ZXPDF417.h
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/pdf417/encoder/ZXPDF417.h
+END

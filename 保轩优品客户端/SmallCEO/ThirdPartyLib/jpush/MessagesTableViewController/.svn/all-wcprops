@@ -1,0 +1,149 @@
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/bxup_ios/!svn/ver/150/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController
+END
+JSMessageInputView.h
+K 25
+svn:wc:ra_dav:version-url
+V 162
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/JSMessageInputView.h
+END
+JSBubbleMessageCell.h
+K 25
+svn:wc:ra_dav:version-url
+V 163
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/JSBubbleMessageCell.h
+END
+JSMessageInputView.m
+K 25
+svn:wc:ra_dav:version-url
+V 162
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/JSMessageInputView.m
+END
+NSString+JSMessagesView.h
+K 25
+svn:wc:ra_dav:version-url
+V 167
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/NSString+JSMessagesView.h
+END
+JSBubbleMessageCell.m
+K 25
+svn:wc:ra_dav:version-url
+V 163
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/JSBubbleMessageCell.m
+END
+JSMessagesViewController.h
+K 25
+svn:wc:ra_dav:version-url
+V 168
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/JSMessagesViewController.h
+END
+UIButton+JSMessagesView.h
+K 25
+svn:wc:ra_dav:version-url
+V 167
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/UIButton+JSMessagesView.h
+END
+NSString+JSMessagesView.m
+K 25
+svn:wc:ra_dav:version-url
+V 167
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/NSString+JSMessagesView.m
+END
+JSMessageSoundEffect.h
+K 25
+svn:wc:ra_dav:version-url
+V 164
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/JSMessageSoundEffect.h
+END
+UIColor+JSMessagesView.h
+K 25
+svn:wc:ra_dav:version-url
+V 166
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/UIColor+JSMessagesView.h
+END
+JSMessagesViewController.m
+K 25
+svn:wc:ra_dav:version-url
+V 168
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/JSMessagesViewController.m
+END
+UIButton+JSMessagesView.m
+K 25
+svn:wc:ra_dav:version-url
+V 169
+/bxup_ios/!svn/ver/150/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/UIButton+JSMessagesView.m
+END
+UIImage+JSMessagesView.h
+K 25
+svn:wc:ra_dav:version-url
+V 166
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/UIImage+JSMessagesView.h
+END
+UIView+AnimationOptionsForCurve.h
+K 25
+svn:wc:ra_dav:version-url
+V 175
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/UIView+AnimationOptionsForCurve.h
+END
+JSMessageSoundEffect.m
+K 25
+svn:wc:ra_dav:version-url
+V 164
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/JSMessageSoundEffect.m
+END
+JSDismissiveTextView.h
+K 25
+svn:wc:ra_dav:version-url
+V 164
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/JSDismissiveTextView.h
+END
+UIColor+JSMessagesView.m
+K 25
+svn:wc:ra_dav:version-url
+V 166
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/UIColor+JSMessagesView.m
+END
+UIImage+JSMessagesView.m
+K 25
+svn:wc:ra_dav:version-url
+V 166
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/UIImage+JSMessagesView.m
+END
+UIView+AnimationOptionsForCurve.m
+K 25
+svn:wc:ra_dav:version-url
+V 175
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/UIView+AnimationOptionsForCurve.m
+END
+JSMessageTextView.h
+K 25
+svn:wc:ra_dav:version-url
+V 161
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/JSMessageTextView.h
+END
+JSDismissiveTextView.m
+K 25
+svn:wc:ra_dav:version-url
+V 164
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/JSDismissiveTextView.m
+END
+JSBubbleView.h
+K 25
+svn:wc:ra_dav:version-url
+V 156
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/JSBubbleView.h
+END
+JSMessageTextView.m
+K 25
+svn:wc:ra_dav:version-url
+V 161
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/JSMessageTextView.m
+END
+JSBubbleView.m
+K 25
+svn:wc:ra_dav:version-url
+V 156
+/bxup_ios/!svn/ver/6/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/jpush/MessagesTableViewController/JSBubbleView.m
+END

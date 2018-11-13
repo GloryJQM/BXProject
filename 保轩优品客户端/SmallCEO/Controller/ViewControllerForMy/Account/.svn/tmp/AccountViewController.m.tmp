@@ -1,0 +1,433 @@
+//
+//  AccountViewController.m
+//  SmallCEO
+//
+//  Created by peterwang on 17/3/2.
+//  Copyright © 2017年 lemuji. All rights reserved.
+//
+
+#import "AccountViewController.h"
+#import "BillSuspendView.h"//金币，代金券，积分，账单 通用
+#import "BillsTableViewCell.h"
+#import "TransferViewController.h"
+#import "CumulativeGainViewController.h"
+#import "BillsDetailViewController.h"
+
+
+@interface AccountViewController ()<BillSuspendedViewDelegate,UITableViewDelegate,UITableViewDataSource>
+
+
+@property (nonatomic, strong) UIView  *titleView;
+@property (nonatomic, strong) BillSuspendView *suspendedView;
+@property (nonatomic, strong) UIScrollView  *mainScrollView;
+@property (nonatomic, strong) NSMutableArray *tableViewDatas;
+@property (nonatomic, strong) NSMutableArray  *tableViews;
+@property (nonatomic, assign) NSInteger curPage;
+@property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong) NSMutableArray *headerViews;
+@property (nonatomic, strong) NSMutableArray *footerViews;
+@property (nonatomic, strong) NSMutableArray *imageArray;
+@property (nonatomic, assign) NSInteger deleteTag;
+@end
+
+@implementation AccountViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    if ([_type isEqualToString:@"金币"]) {
+        self.title = @"我的金币";
+    }else if ([_type isEqualToString:@"积分"]){
+        self.title = @"我的积分";
+    }else if ([_type isEqualToString:@"代金券"]){
+        self.title = @"我的代金券";
+    }
+    [self createNavi];
+    [self createView];
+    [self creatBackView];
+    
+}
+- (void)createNavi {
+    _headerViews = [NSMutableArray new];
+    _footerViews = [NSMutableArray new];
+    UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 40, 20)];
+    [btn setTitle:@"图表" forState:UIControlStateNormal];
+    btn.titleLabel.font = [UIFont systemFontOfSize:15];
+    [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [btn addTarget:self action:@selector(btnAction) forControlEvents:UIControlEventTouchUpInside];
+    UIBarButtonItem *rightbarbtn = [[UIBarButtonItem alloc]initWithCustomView:btn];
+//    self.navigationItem.rightBarButtonItem = rightbarbtn;
+}
+- (void)creatBackView
+{
+    _imageArray = [NSMutableArray array];
+    for (int i = 0; i < self.suspendedView.items.count;i++ ) {
+        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(UI_SCREEN_WIDTH/2-75, UI_SCREEN_HEIGHT/4-50, 150, 150)];
+        imageView.hidden = NO;
+        imageView.image = [UIImage imageNamed:@"icon-tishi2@2x"];
+        UITableView *currentTableView = self.tableViews[i];
+        [currentTableView addSubview:imageView];
+        [_imageArray addObject:imageView];
+    }
+}
+- (void)createView {
+    self.tableViewDatas = [NSMutableArray new];
+    self.tableViews = [NSMutableArray new];
+    [self.view addSubview:self.titleView];
+    [self.view addSubview:self.suspendedView];
+    
+    
+    self.mainScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, self.suspendedView.maxY, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT  - self.suspendedView.height-20-self.titleView.height-5)];
+    self.mainScrollView.contentSize = CGSizeMake(UI_SCREEN_WIDTH * self.suspendedView.items.count, self.mainScrollView.height);
+    self.mainScrollView.delegate = self;
+    self.mainScrollView.pagingEnabled = YES;
+    self.mainScrollView.bounces = NO;
+    self.mainScrollView.scrollEnabled = NO;
+    [self.view addSubview:self.mainScrollView];
+    for (NSInteger i = 0; i < self.suspendedView.items.count; i++) {
+        //[self.tableViewDatas addObject:[NSNull null]];
+        UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(i * UI_SCREEN_WIDTH, 0, UI_SCREEN_WIDTH, self.mainScrollView.height-BillSuspendedViewHeight)];
+        [self.tableViews addObject:tableView];
+        tableView.delegate = self;
+        tableView.dataSource = self;
+        tableView.backgroundColor = WHITE_COLOR;
+        tableView.tableFooterView = [UIView new];
+        [self.mainScrollView addSubview:tableView];
+        [tableView registerClass:[BillsTableViewCell class] forCellReuseIdentifier:@"BillsCell"];
+        //刷新
+        MJRefreshHeaderView *header = [[MJRefreshHeaderView alloc]init];
+        header.scrollView = tableView;
+        header.beginRefreshingBlock = ^(MJRefreshBaseView *view){
+            self.curPage = 1;
+            [self loadMyDatas];
+        };
+        [_headerViews addObject:header];
+        MJRefreshFooterView *footer = [[MJRefreshFooterView alloc]init];
+        footer.scrollView = tableView;
+        footer.beginRefreshingBlock = ^(MJRefreshBaseView *view){
+            self.curPage++;
+            [self loadMyDatas];
+        };
+        [_footerViews addObject:footer];
+    }
+
+}
+- (void)viewWillAppear:(BOOL)animated {
+    self.curPage = 1;
+    [self loadMyDatas];
+}
+#pragma mark-UITabViewDtaSouce
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    if ([tableView isEqual:self.tableViews[0]]) {
+        return   self.tableViewDatas.count;
+    }else if ([tableView isEqual:self.tableViews[1]])
+    {
+        return   self.tableViewDatas.count;
+    }else {
+        return   self.tableViewDatas.count;
+    }
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return 1;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    //改变单元格分割线长度
+    if ([tableView respondsToSelector:@selector(setSeparatorInset:)]) {
+        [tableView setSeparatorInset:UIEdgeInsetsZero];
+    }
+    if ([tableView respondsToSelector:@selector(setLayoutMargins:)]) {
+        [tableView setLayoutMargins:UIEdgeInsetsZero];
+    }
+    BillsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"BillsCell"];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+        [cell setLayoutMargins:UIEdgeInsetsZero];
+    }
+    if (self.tableViewDatas.count > indexPath.section) {
+        if ([self.tableViewDatas[indexPath.section][@"number"] doubleValue] > 0 ) {
+            cell.tipImage.image = [UIImage imageNamed:@"pho-shouru"];
+            cell.detailLabel.text = self.tableViewDatas[indexPath.section][@"remark"];
+        }else {
+            cell.tipImage.image = [UIImage imageNamed:@"pho-zhichu@2x"];
+            cell.detailLabel.text = self.tableViewDatas[indexPath.section][@"remark"];
+        }
+        cell.moneyLabel.text = self.tableViewDatas[indexPath.section][@"number_txt"];
+        cell.dateLabel.text = self.tableViewDatas[indexPath.section][@"log_time"];
+    }
+    //长按删除操作
+    UILongPressGestureRecognizer *longP = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(deleteAction:)];
+    longP.minimumPressDuration = 0.5f;
+    [cell.contentView addGestureRecognizer:longP];
+    
+    return cell;
+}
+
+#pragma mark - UITableViewDelegate
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 5;
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 60;
+}
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    
+    return [UIView new];
+}
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    BillsDetailViewController *detail = [[BillsDetailViewController alloc]init];
+    NSDictionary *dic = self.tableViewDatas[indexPath.section];
+    detail.orderId = dic[@"id"];
+    detail.money = dic[@"number"];
+    if ([dic[@"number"] floatValue] > 0) {
+        detail.type = NO;
+    }else {
+        detail.type = YES;
+    }
+    detail.act = self.type;
+    [self.navigationController pushViewController:detail animated:YES];
+}
+
+- (void)deleteAction:(UILongPressGestureRecognizer *)sender {
+    //进行提醒
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        UITableView *curT = self.tableViews[self.suspendedView.currentItemIndex];
+        CGPoint point = [sender locationInView:curT];
+        NSIndexPath *indexPath = [curT indexPathForRowAtPoint:point];
+        self.deleteTag = indexPath.section;
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示" message:@"确认要删除吗" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        [alertView show];
+    }
+}
+
+#pragma mark -UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1) {
+        NSString *url;
+        if ([_type isEqualToString:@"金币"]) {
+            url =  MOBILE_SERVER_URL(@"goldApi.php");
+        }else if ([_type isEqualToString:@"积分"]){
+            url =  MOBILE_SERVER_URL(@"pointsApi.php");
+        }else if ([_type isEqualToString:@"代金券"]){
+            url =  MOBILE_SERVER_URL(@"couponApi.php");
+        }
+        TokenURLRequest *request = [[TokenURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+        [request setHTTPMethod:@"POST"];
+        NSString *body = [NSString stringWithFormat:@"act=5&id=%@", self.tableViewDatas[self.deleteTag][@"id"]];
+        [request  setHTTPBody:[body dataUsingEncoding:NSUTF8StringEncoding]];
+        AFHTTPRequestOperation *op_yue = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+        op_yue.responseSerializer = [AFJSONResponseSerializer serializer];
+        [op_yue setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            if ([responseObject[@"is_success"] integerValue] == 1) {
+                //                [self.tableViewDatas removeObjectAtIndex:self.deleteTag];
+                //                UITableView *cur = self.tableViews[self.suspendedView.currentItemIndex];
+                //                [cur reloadData];
+                [self loadMyDatas];
+            }else {
+                [SVProgressHUD showErrorWithStatus:responseObject[@"info"]];
+            }
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            [SVProgressHUD showErrorWithStatus:@"网络错误"];
+        }];
+        [op_yue start];
+    }
+}
+
+#pragma mark - SuspendedViewDelegate
+- (void)didClickView:(BillSuspendView *)view atItemIndex:(NSInteger)index
+{
+    [self.mainScrollView setContentOffset:CGPointMake(self.suspendedView.currentItemIndex * UI_SCREEN_WIDTH, 0) animated:YES];
+    self.curPage = 1;
+    [self loadMyDatas];
+//    if ([currentModelArr isKindOfClass:[NSNull class]])
+//    {
+//        UITableView *currentTableView = self.tableViews[self.suspendedView.currentItemIndex];
+//        //[currentTableView.mj_header beginRefreshing];
+//    }
+    
+}
+#pragma mark - UIScrollViewDelegate
+//- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+//{
+//    if (scrollView != self.mainScrollView) return;
+//    
+//    NSInteger index = scrollView.contentOffset.x / scrollView.width;
+//    self.suspendedView.currentItemIndex = index;
+//    
+////    NSMutableArray *oldDatas = [self.tableViewDatas objectAtIndex:self.suspendedView.currentItemIndex];
+//    [self loadMyDatas];
+////    if ([oldDatas isKindOfClass:[NSNull class]])
+////    {
+////        UITableView *currentTableView = self.tableViews[self.suspendedView.currentItemIndex];
+////        //[currentTableView.mj_header beginRefreshing];
+////    }
+//}
+#pragma mark - Private methods
+- (void)endCurrentTableViewRefreshing
+{
+//    UITableView *currentTableView = self.tableViews[self.suspendedView.currentItemIndex];
+    //    [currentTableView.mj_header endRefreshing];
+    //    [currentTableView.mj_footer endRefreshing];
+}
+#pragma mark - Refresh methods
+- (void)loadMyDatas
+{
+    //    [self endCurrentTableViewRefreshing];
+    //    self.curPage = 1;
+    //[self requestData];
+    //[self endCurrentTableViewRefreshing];
+    [self getData:[NSString stringWithFormat:@"%ld",(long)_suspendedView.currentItemIndex] AndDate:@"" Andpage:[NSString stringWithFormat:@"%ld",(long)self.curPage]];
+}
+
+
+#pragma  mark - 按钮点击方法
+- (void)btnAction {
+    CumulativeGainViewController *vc = [CumulativeGainViewController new];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+
+- (void)transferAction {
+    TransferViewController *transfer = [TransferViewController new];
+    transfer.type = _type;
+    [self.navigationController pushViewController:transfer animated:YES];
+}
+#pragma mark  http
+- (void)getData:(NSString *)type AndDate:(NSString *)date Andpage:(NSString *)page{
+    [SVProgressHUD show];
+    NSString *str;
+    if ([_type isEqualToString:@"金币"]) {
+        str =  MOBILE_SERVER_URL(@"goldApi.php");
+    }else if ([_type isEqualToString:@"积分"]){
+        str =  MOBILE_SERVER_URL(@"pointsApi.php");
+    }else if ([_type isEqualToString:@"代金券"]) {
+        str =  MOBILE_SERVER_URL(@"couponApi.php");
+    }
+    NSString *bodyStr = [NSString stringWithFormat:@"type=%@&p=%@&act=1",type,page];
+    [RequestManager startRequestWithUrl:str
+                                   body:bodyStr
+                           successBlock:^(AFHTTPRequestOperation *operation, id responseObject) {
+                               if ([[responseObject objectForKey:@"is_success"] integerValue] == 1) {
+                                   if (self.curPage == 1) {
+                                       self.tableViewDatas = [NSMutableArray array];
+                                       for (NSDictionary *dic in responseObject[@"list"]) {
+                                           [self.tableViewDatas addObject:dic];
+                                       }
+                                   }else {
+                                       for (NSDictionary *dic in responseObject[@"list"]) {
+                                           [self.tableViewDatas addObject:dic];
+                                       }
+                                   }
+                                   UITableView *currentTableView = self.tableViews[self.suspendedView.currentItemIndex];
+                                   if ([_type isEqualToString:@"金币"]) {
+                                       _titleLabel.text = [NSString stringWithFormat:@"我的金币:%@",responseObject[@"curr_gold_number"]];
+                                   }else if ([_type isEqualToString:@"积分"]){
+                                       _titleLabel.text = [NSString stringWithFormat:@"我的积分:%@",responseObject[@"curr_points_number"]];
+                                   }else if ([_type isEqualToString:@"代金券"]){
+                                       _titleLabel.text = [NSString stringWithFormat:@"我的代金券:%@",responseObject[@"curr_coupon_number"]];
+                                   }
+                                   [currentTableView reloadData];
+                               }else {
+                                   if ([responseObject valueForKey:@"info"]!=nil) {
+                                       [SVProgressHUD showErrorWithStatus:[responseObject valueForKey:@"info"]] ;
+                                   }else{
+                                       [SVProgressHUD showErrorWithStatus:@"网络错误"] ;
+                                   }
+                               }
+                               
+                               [SVProgressHUD dismiss];
+                               MJRefreshHeaderView *header = [self.headerViews objectAtIndex:self.suspendedView.currentItemIndex];
+                               MJRefreshFooterView *footer = [self.footerViews objectAtIndex:self.suspendedView.currentItemIndex];
+                               [header endRefreshing];
+                               [footer endRefreshing];
+                               UIImageView *image = self.imageArray[self.suspendedView.currentItemIndex];
+                               if (self.tableViewDatas.count == 0) {
+                                   image.hidden = NO;
+                               }else {
+                                   image.hidden = YES;
+                               }
+                               
+                           }
+                           failureBlock:^(AFHTTPRequestOperation *operation, NSError *error) {
+                               DLog(@"请求发生的错误是:%@",error);
+                               DLog(@"返回的数据:%@",operation.responseString);
+                               [SVProgressHUD dismissWithError:@"网络错误"];
+                               MJRefreshHeaderView *header = [self.headerViews objectAtIndex:self.suspendedView.currentItemIndex];
+                               MJRefreshFooterView *footer = [self.footerViews objectAtIndex:self.suspendedView.currentItemIndex];
+                               [header endRefreshing];
+                               [footer endRefreshing];
+                               UIImageView *image = self.imageArray[self.suspendedView.currentItemIndex];
+                               if (self.tableViewDatas.count == 0) {
+                                   image.hidden = NO;
+                               }else {
+                                   image.hidden = YES;
+                               }
+
+                           }];
+}
+
+#pragma mark - Getter
+- (BillSuspendView *)suspendedView
+{
+    if (!_suspendedView)
+    {
+        _suspendedView = [[BillSuspendView alloc] initWithSuspendedViewStyle:SuspendedViewStyleVaule3];
+        _suspendedView.frame = CGRectMake(0, 45, UI_SCREEN_WIDTH, BillSuspendedViewHeight);
+        _suspendedView.items = @[@"全部", @"收入 ",@"支出 "];
+        
+        _suspendedView.backgroundColor = [UIColor whiteColor];
+        _suspendedView.delegate = self;
+        //[self.view addSubview:_suspendedView];
+        
+        //实现下方横线条
+//        UIView *greyView = [[UIView alloc]initWithFrame:CGRectMake(0, _suspendedView.height-3, UI_SCREEN_WIDTH, 3)];
+//        greyView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+//        [_suspendedView addSubview:greyView];
+//        [_suspendedView sendSubviewToBack:greyView];
+    }
+    
+    return _suspendedView;
+}
+- (UIView *)titleView {
+    if (!_titleView) {
+        _titleView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, 45)];
+        _titleView.backgroundColor = [UIColor clearColor];
+        UIView *backView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, 40)];
+        backView.backgroundColor = [UIColor whiteColor];
+        [_titleView addSubview:backView];
+        
+        
+        _titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 10, UI_SCREEN_WIDTH - 100, 20)];
+        _titleLabel.text = @"我的金币:0.00";
+        [_titleView addSubview:_titleLabel];
+        
+        UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(UI_SCREEN_WIDTH-60, 10, 50, 20)];
+        [btn setTitle:@"转账" forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        btn.titleLabel.font = [UIFont systemFontOfSize:15];
+        [btn addTarget:self action:@selector(transferAction) forControlEvents:UIControlEventTouchUpInside];
+        [_titleView addSubview:btn];
+        if ([self.type isEqualToString:@"积分"] ||[self.type isEqualToString:@"代金券"]) {
+            btn.hidden = YES;
+        }
+        
+        UIView *smallView = [[UIView alloc]initWithFrame:CGRectMake(0, 40, UI_SCREEN_WIDTH, 5)];
+        smallView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+        [_titleView addSubview:smallView];
+        
+    }
+    return _titleView;
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+@end

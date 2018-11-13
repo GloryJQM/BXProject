@@ -1,0 +1,146 @@
+//
+//  CustomTypeImageView.m
+//  cancelRequsetTest
+//
+//  Created by Cai on 14-8-26.
+//  Copyright (c) 2014年 jiang. All rights reserved.
+//
+
+#import "CustomTypeImageView.h"
+
+#import "UIView+Specification.h"
+
+@implementation CustomTypeImageView
+
+
+- (id)initWithFrame:(CGRect)frame ContentDic:(NSDictionary *)dic
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        // Initialization code
+        NSLog(@"字典是%@",dic);
+        self.clipsToBounds = YES;
+        self.backgroundColor = [UIColor whiteColor];
+        _itemArr = [[NSMutableArray alloc] initWithCapacity:0];
+        _itemDataArr = [[NSMutableArray alloc] initWithCapacity:0];
+        
+        NSArray *contentarr = [[NSArray alloc] initWithArray:[dic objectForKey:@"content"]];
+        
+        [_itemDataArr addObjectsFromArray:contentarr];
+        
+        for (int i = 0; i < contentarr.count; i++) {
+            NSDictionary *tempdic0 = [[NSDictionary alloc] initWithDictionary:[contentarr objectAtIndex:i]];
+            float x = [[NSString stringWithFormat:@"%@",[tempdic0 objectForKey:@"x"]] floatValue]/2.0*adapterFactor;
+            float y = [[NSString stringWithFormat:@"%@",[tempdic0 objectForKey:@"y"]] floatValue]/2.0*adapterFactor;
+            float w = [[NSString stringWithFormat:@"%@",[tempdic0 objectForKey:@"width"]] floatValue]/2.0*adapterFactor;
+            float h = [[NSString stringWithFormat:@"%@",[tempdic0 objectForKey:@"height"]] floatValue]/2.0*adapterFactor;
+            NSString *imgurl = [NSString stringWithFormat:@"%@",[tempdic0 objectForKey:@"picurl"]];
+            UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(x, y, w, h)];
+
+            NSString *customCreateNameAndPrice = [NSString stringWithFormat:@"%@", [tempdic0 objectForKey:@"is_redraw_for_goods"]];
+            img.contentMode = UIViewContentModeScaleAspectFit;
+            if ([customCreateNameAndPrice isValid] &&
+                [customCreateNameAndPrice integerValue] == 1)
+            {
+                
+                CGFloat labelTotalHeight = 45.0;
+                CGFloat topOrBottomEdgeDistance = 15.0;
+                CGPoint centerPoint = img.center;
+                CGFloat rate = img.height == 0 ? 0 : img.width / (1.0 * img.height);
+                img.y += topOrBottomEdgeDistance;
+                CGFloat tempValue = topOrBottomEdgeDistance * 2 + labelTotalHeight;
+                img.width -= (tempValue * rate);
+                img.height -= tempValue;
+                img.center = CGPointMake(centerPoint.x, img.center.y);
+                
+                imgurl = [NSString stringWithFormat:@"%@",[tempdic0 objectForKey:@"goods_img_for_show"]];
+                UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(x + 10, y + h - labelTotalHeight, w - 20, 30)];
+                nameLabel.text = [NSString stringWithFormat:@"%@", [tempdic0 objectForKey:@"goods_name_for_show"]];
+                nameLabel.numberOfLines = 2;
+                nameLabel.font = [UIFont systemFontOfSize:12.0];
+                nameLabel.textAlignment = NSTextAlignmentCenter;
+                nameLabel.textColor = [UIColor colorFromHexCode:@"3e3e3e"];
+                [self addSubview:nameLabel];
+                
+                UILabel *priceLabel = [[UILabel alloc] initWithFrame:CGRectMake(x, CGRectGetMaxY(nameLabel.frame), w, 15)];
+                priceLabel.text = [NSString stringWithFormat:@"%@", [tempdic0 objectForKey:@"goods_price_for_show"]];
+                priceLabel.textAlignment = NSTextAlignmentCenter;
+                priceLabel.font = [UIFont systemFontOfSize:13.0];
+                priceLabel.textColor = App_Main_Color;
+                [self addSubview:priceLabel];
+            }
+
+            
+            UIImage *image=[UIImage imageNamed:@"defaultImage_640.png"];
+            //            UIImage *newImage=[image imageWithMinimumSize:CGSizeMake(w, w)];
+            
+            [img sd_setImageWithURL:[NSURL URLWithString:imgurl] placeholderImage:image];
+
+            img.backgroundColor = [UIColor clearColor];
+            [self addSubview:img];
+            UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+            btn.frame = CGRectMake(x, y, w, h);
+            [btn addTarget:self action:@selector(btnclick:) forControlEvents:UIControlEventTouchUpInside];
+            btn.tag = i+10;
+            [self addSubview:btn];
+            
+            [_itemArr addObject:img];
+        }
+        
+        
+    }
+    return self;
+    
+}
+
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        // Initialization code
+    }
+    return self;
+}
+
+
+-(void)btnclick:(UIButton *)btn
+{
+    if ([_custypeDelegate respondsToSelector:@selector(CustomTypeImageViewButton:CurView:)]) {
+        [_custypeDelegate CustomTypeImageViewButton:btn.tag CurView:self];
+    }
+
+}
+
+
+-(void)CustomTypeViewLaodDatas:(NSDictionary *)tempDic
+{
+    DLog(@"数据是%@-------%@",tempDic,_itemDataArr);
+    NSArray *dataArr = [[NSArray alloc] initWithArray:[tempDic objectForKey:@"content"]];
+    
+    if (dataArr.count != _itemArr.count) {
+        return;
+    }
+    
+    for (int i = 0; i < _itemArr.count; i++) {
+        NSDictionary *tempdic = [NSDictionary dictionaryWithDictionary:[dataArr objectAtIndex:i]];
+        NSString *imgurl = [NSString stringWithFormat:@"%@",[tempdic objectForKey:@"picurl"]];
+        UIImageView *img = (UIImageView *)[_itemArr objectAtIndex:i];
+        [img sd_setImageWithURL:[NSURL URLWithString:imgurl]];
+
+    }
+    
+    
+    
+}
+
+
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect
+{
+    // Drawing code
+}
+*/
+
+@end

@@ -1,0 +1,15 @@
+//
+//  SGPlatformHelper.h
+//  DeKang
+//
+//  Created by quanmai on 16/4/18.
+//  Copyright © 2016年 quanmai. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface SGPlatformHelper : NSObject
+
++(void)registerAppkeyWithLaunchOptions:(NSDictionary *)launchOptions;
+
+@end

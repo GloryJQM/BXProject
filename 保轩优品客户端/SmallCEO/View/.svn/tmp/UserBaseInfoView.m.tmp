@@ -1,0 +1,136 @@
+//
+//  UserBaseInfoView.m
+//  SmallCEO
+//
+//  Created by huang on 2017/2/24.
+//  Copyright © 2017年 lemuji. All rights reserved.
+//
+#import "UserBaseInfoView.h"
+#import "InviteViewController.h"
+#import "SubInviteViewController.h"
+
+CGFloat UserBaseInfoViewHeight = 170.0;
+
+@implementation UserBaseInfoView
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    frame.size.height = UserBaseInfoViewHeight;
+    if (self = [super initWithFrame:frame]) {
+        [self setupMainView];
+    }
+    return self;
+}
+
+- (void)setupMainView {
+    self.avatarImageView = [[UIImageView alloc] initWithFrame:CGRectMake(UI_SCREEN_WIDTH / 2 - 30, 20, 60, 60)];
+    self.avatarImageView.layer.cornerRadius = self.avatarImageView.width / 2.0;
+    self.avatarImageView.clipsToBounds = YES;
+    [self addSubview:self.avatarImageView];
+    
+    self.nickNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, self.avatarImageView.maxY + 10, UI_SCREEN_WIDTH , 20)];
+    self.nickNameLabel.font = [UIFont systemFontOfSize:18.0];
+    self.nickNameLabel.textAlignment = NSTextAlignmentCenter;
+    self.nickNameLabel.textColor = [UIColor whiteColor];
+    [self addSubview:self.nickNameLabel];
+    
+    self.inviteTextLabel = [[UILabel alloc] initWithFrame:CGRectMake((UI_SCREEN_WIDTH - 250) / 2, self.nickNameLabel.maxY + 10, 80, 20)];
+    _inviteTextLabel.text = @"   邀请码: ";
+    _inviteTextLabel.hidden = YES;
+    _inviteTextLabel.textColor = [UIColor whiteColor];
+    _inviteTextLabel.font = [UIFont systemFontOfSize:15.0];
+    [self addSubview:_inviteTextLabel];
+    
+    self.inviteCodeLabel = [[UILabel alloc] initWithFrame:CGRectMake(_inviteTextLabel.maxX, _inviteTextLabel.y - 4, 80, _inviteTextLabel.height + 8)];
+    self.inviteCodeLabel.textColor = [UIColor blackColor];
+    self.inviteCodeLabel.backgroundColor = [UIColor colorWithRed:250 / 255.0 green:235 / 255.0 blue:158/255.0 alpha:1];
+    self.inviteCodeLabel.textAlignment = NSTextAlignmentCenter;
+    self.inviteCodeLabel.font = [UIFont boldSystemFontOfSize:15.0];
+    self.inviteCodeLabel.layer.cornerRadius = 3.0;
+    self.inviteCodeLabel.clipsToBounds = YES;
+    self.inviteCodeLabel.userInteractionEnabled = YES;
+    [self addSubview:self.inviteCodeLabel];
+    
+    UILongPressGestureRecognizer *longPressGR = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressInviteCode:)];
+    [self.inviteCodeLabel addGestureRecognizer:longPressGR];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction)];
+    [self.inviteCodeLabel addGestureRecognizer:tap];
+    
+    self.warningLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.inviteCodeLabel.maxX + 5, _inviteTextLabel.y, 80, 20)];
+    _warningLabel.text = @"点击分享";
+    _warningLabel.textColor = [UIColor whiteColor];
+    _warningLabel.hidden = YES;
+    _warningLabel.font = [UIFont systemFontOfSize:14.0];
+    [self addSubview:_warningLabel];
+}
+
+#pragma mark - UILongPressGestureRecognizer method
+- (void)longPressInviteCode:(UILongPressGestureRecognizer *)gestureRecognizer {
+    if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        UILabel *inviteLabel = (UILabel *)gestureRecognizer.view;
+        [[UIPasteboard generalPasteboard] setPersistent:YES];
+        [[UIPasteboard generalPasteboard] setValue:inviteLabel.text forPasteboardType:[UIPasteboardTypeListString objectAtIndex:0]];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:App_Alert_Notice_Title message:@"描述成功复制到黏贴板" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+        [alertView show];
+    }
+}
+#pragma mark - UITapGestureRecognizer method
+- (void)tapAction {
+    if ([self.isHaveParent integerValue] == 1) {
+        InviteViewController *invite = [[InviteViewController alloc]init];
+        invite.code = self.inviteCodeLabel.text;
+        invite.isCanEditInviteCode = self.isCanEditInviteCode;
+        [[self viewController:self].navigationController pushViewController:invite animated:YES];
+    }else {
+        SubInviteViewController *vc = [[SubInviteViewController alloc]init];
+        vc.code = self.inviteCodeLabel.text;
+        vc.isCanEditInviteCode = self.isCanEditInviteCode;
+        [[self viewController:self].navigationController pushViewController:vc animated:YES];
+    }
+}
+
+- (UIViewController*)viewController:(UIView *)view {
+    for (UIView* next = [view superview]; next; next = next.superview) {
+        UIResponder* nextResponder = [next nextResponder];
+        if ([nextResponder isKindOfClass:[UIViewController class]]) {
+            return (UIViewController*)nextResponder;
+        }
+    }
+    return nil;
+}
+
+- (void)setModelDictionary:(NSDictionary *)dic {
+    self.nickNameLabel.text = [NSString stringWithFormat:@"%@", dic[@"user_info"][@"customer_name"]];
+    
+    self.inviteCodeLabel.text = [NSString stringWithFormat:@"%@", dic[@"user_info"][@"invite_code"]];
+    
+    if (self.inviteCodeLabel.text.length > 0) {
+        self.warningLabel.hidden = NO;
+        self.inviteTextLabel.hidden = NO;
+        self.inviteCodeLabel.frame = CGRectMake(self.inviteTextLabel.maxX, self.inviteTextLabel.y - 4, 80, self.inviteTextLabel.height + 8);
+    }else {
+        self.warningLabel.hidden = YES;
+        self.inviteTextLabel.hidden = YES;
+        self.inviteCodeLabel.frame  = CGRectMake((UI_SCREEN_WIDTH - 80) / 2, self.inviteTextLabel.y - 4, 80, self.inviteTextLabel.height + 8);
+        self.inviteCodeLabel.text = @"设置邀请码";
+    }
+    //两个属性
+    if ([[dic[@"user_info"] allKeys] containsObject:@"isCanEditInviteCode"]) {
+        if (dic[@"user_info"][@"isCanEditInviteCode"] == NULL || [dic[@"user_info"][@"isCanEditInviteCode"]isKindOfClass:[NSNull class]]) {
+            self.isCanEditInviteCode = @"1";
+        }else if ([dic[@"user_info"][@"isCanEditInviteCode"] integerValue] == 0||[dic[@"user_info"][@"isCanEditInviteCode"] integerValue] == 1){
+            self.isCanEditInviteCode = [NSString stringWithFormat:@"%@", dic[@"user_info"][@"isCanEditInviteCode"]];
+        }
+    }else {
+        self.isCanEditInviteCode = @"1";
+    }
+    if (![[dic[@"user_info"] allKeys] containsObject:@"isHaveParent"] || dic[@"user_info"][@"isHaveParent"] == NULL || [dic[@"user_info"][@"isHaveParent"]isKindOfClass:[NSNull class]]) {
+        self.isHaveParent = @"1";
+    }else {
+        self.isHaveParent = dic[@"user_info"][@"isHaveParent"];
+    }
+    NSURL *url = [NSURL URLWithString:dic[@"user_info"][@"customer_avatar"]];
+    [self.avatarImageView sd_setImageWithURL:url];
+}
+
+@end

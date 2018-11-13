@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/bxup_ios/!svn/ver/197/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model
+END
+Base64.m
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/Base64.m
+END
+MessageModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/MessageModel.h
+END
+AddressModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/AddressModel.h
+END
+AddressSingleton.h
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/AddressSingleton.h
+END
+PreferenceManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/PreferenceManager.h
+END
+MessageModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/MessageModel.m
+END
+PayMethodModel.h
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/PayMethodModel.h
+END
+AddressModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/AddressModel.m
+END
+SlideShowScrollView.h
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/bxup_ios/!svn/ver/87/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/SlideShowScrollView.h
+END
+TokenURLRequest.h
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/TokenURLRequest.h
+END
+AddressSingleton.m
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/AddressSingleton.m
+END
+PreferenceManager.m
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/PreferenceManager.m
+END
+BannerScrollView.h
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/bxup_ios/!svn/ver/87/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/BannerScrollView.h
+END
+PayMethodModel.m
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/PayMethodModel.m
+END
+SlideShowScrollView.m
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/bxup_ios/!svn/ver/87/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/SlideShowScrollView.m
+END
+TokenURLRequest.m
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/bxup_ios/!svn/ver/128/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/TokenURLRequest.m
+END
+RequestManager.h
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/RequestManager.h
+END
+Base64.h
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/Base64.h
+END
+BannerScrollView.m
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/bxup_ios/!svn/ver/197/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/BannerScrollView.m
+END
+RequestManager.m
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/Model/RequestManager.m
+END

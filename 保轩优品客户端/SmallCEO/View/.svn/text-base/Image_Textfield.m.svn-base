@@ -1,0 +1,50 @@
+//
+//  Image_Textfield.m
+//  chufake
+//
+//  Created by wuxiaohui on 13-12-26.
+//  Copyright (c) 2013年 quanmai. All rights reserved.
+//
+
+#import "Image_Textfield.h"
+
+
+@implementation Image_Textfield
+
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        
+        CGFloat w = self.frame.size.width;
+        CGFloat h = self.frame.size.height;
+        
+
+        
+        _textfield = [[UITextField alloc]initWithFrame:CGRectMake(10+h/4, 1, w-42-h,  h-2)];
+        _textfield.backgroundColor = [UIColor clearColor];
+        [self addSubview:_textfield];
+        
+        UIView *line = [[UIView alloc] initWithFrame:CGRectMake(_textfield.x, _textfield.maxY, self.width - 30, 1)];
+        line.backgroundColor = [UIColor groupTableViewBackgroundColor];
+        [self addSubview:line];
+        
+        // Initialization code
+    }
+    
+    
+    return self;
+}
+
+
+
+/*
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect
+{
+    // Drawing code
+}
+*/
+
+@end

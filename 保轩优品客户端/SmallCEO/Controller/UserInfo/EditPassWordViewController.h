@@ -1,0 +1,17 @@
+//
+//  EditPassWordViewController.h
+//  Lemuji
+//
+//  Created by chensanli on 15/7/14.
+//  Copyright (c) 2015年 quanmai. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface EditPassWordViewController : UIViewController <UITextFieldDelegate>
+@property (nonatomic,strong)UITextField* phoneNumTf;
+@property (nonatomic,strong)UITextField* passWordTf;
+@property (nonatomic,strong)UITextField* surePwdTf;
+@property (nonatomic,strong)UITextField* twoCodeTf;
+@property (nonatomic,assign)int wp;
+@end

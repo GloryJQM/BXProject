@@ -1,0 +1,639 @@
+//
+//  LoginViewController.m
+//  Lemuji
+//
+//  Created by chensanli on 15/7/14.
+//  Copyright (c) 2015年 quanmai. All rights reserved.
+//
+
+#import "LoginViewController.h"
+#import "LoginNavigationController.h"
+#import "RegisterViewController.h"
+#import "EditPassWordViewController.h"
+#import "HomeViewController.h"
+#import "Base64.h"
+#import "Image_Textfield.h"
+#import <TencentOpenAPI/sdkdef.h>
+#import <TencentOpenAPI/TencentOAuth.h>
+#import "WXApiObject.h"
+#import "WXApi.h"
+#import "WeiboSDK.h"
+#import "LoginBindViewController.h"
+#import "APService.h"
+
+#import "BXRegisterViewController.h"
+#import "BXEditPassWordViewController.h"
+
+#import "LogInAndLogOut.h"
+
+
+#define WXScope @"snsapi_userinfo"
+#define WXState @"wx9b1f413c355dc76f"//用于标识唯一性，可以换成其他
+#define imageWidth  50
+
+@interface LoginViewController () <UIAlertViewDelegate,UITextFieldDelegate, BXRegisterViewControllerDelegate>
+{
+    NSDictionary *_userInfo;
+    CGRect textFieldRect;
+    CGFloat keybordHeight;
+    UIButton *RememberBtn;
+    UIButton *AutoBtn;
+    UIView *mainView;
+    NSMutableArray *textfieldArray;
+    NSMutableArray* permissions;
+    
+    UIButton *_registrationView;
+
+}
+
+@property (nonatomic, assign) BOOL isShowTab; //是否隐藏TabBar
+@property (nonatomic, assign) BOOL selectSetPayPassword; //是否设置支付密码
+
+@end
+
+@implementation LoginViewController
+
+#pragma mark 进入登录页的方法，在其他几个类里使用
++ (void)performIfLogin:(UIViewController *)viewController withShowTab:(BOOL)showTab loginAlreadyBlock:(loginAlreadyBlock)alreadyBlock loginSuccessBlock:(loginSuccessBlock)successBlock
+{
+    if (![[PreferenceManager sharedManager] preferenceForKey:@"didLogin"]) {
+        LoginNavigationController *logvc =  [[LoginNavigationController alloc] init];
+        ((LoginNavigationController*)logvc).viewController.alreadyBlock = alreadyBlock;
+        ((LoginNavigationController*)logvc).viewController.successBlock = successBlock;
+        ((LoginNavigationController*)logvc).viewController.isShowTab = showTab;
+        [viewController presentViewController:logvc animated:YES completion:nil];
+    }else{
+        alreadyBlock();
+    }
+}
+
++ (void)performIfLogin:(UIViewController *)viewController withShowTab:(BOOL)showTab loginAlreadyBlock:(loginAlreadyBlock)alreadyBlock loginSuccessBlock:(loginSuccessBlock)successBlock isOK:(BOOL)isoK
+{
+    if (![[PreferenceManager sharedManager] preferenceForKey:@"didLogin"]) {
+        LoginNavigationController *logvc =  [[LoginNavigationController alloc] init];
+        AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        CustomTabBarController *tab = delegate.tabBarController;
+        [tab setSelectedIndex:0];
+        [logvc.navigationController popToRootViewControllerAnimated:NO];
+    }else{
+        alreadyBlock();
+    }
+}
+
+-(id)init {
+    self = [super init];
+    if (self){
+        
+    }
+    return self;
+    
+}
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        self.title = @"登录";
+        self.navigationController.navigationBarHidden = NO;
+        mainView  = [[UIView alloc]initWithFrame:self.view.bounds];
+        mainView.backgroundColor = [UIColor whiteColor];
+        [self.view addSubview:mainView];
+        
+        //登录界面图标
+        CGFloat height = 100 +30;
+        textfieldArray = [[NSMutableArray alloc]init];
+        for (int i=0; i<2; i++) {
+            Image_Textfield *imagetextfield = [[Image_Textfield alloc]initWithFrame:CGRectMake(15, (UI_SCREEN_HEIGHT/15+25)*i +height, self.view.frame.size.width-30.0, UI_SCREEN_HEIGHT/15)];
+            imagetextfield.backgroundColor = [UIColor clearColor];
+            imagetextfield.textfield.textAlignment = NSTextAlignmentLeft;
+            imagetextfield.textfield.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+            imagetextfield.textfield.tag = i;
+            imagetextfield.textfield.textColor = [UIColor colorWithWhite:0.4 alpha:1.0];
+            imagetextfield.textfield.delegate = self;
+            imagetextfield.textfield.text = @"";
+            imagetextfield.textfield.hideStatus = @"1";
+            imagetextfield.textfield.font = [UIFont systemFontOfSize:14];
+            [imagetextfield.textfield addTarget:self action:@selector(textField:) forControlEvents:UIControlEventEditingChanged];
+            
+
+            if (i==1) {
+                imagetextfield.textfield.secureTextEntry = YES;
+                self.passWordTf = imagetextfield.textfield;
+                self.passWordTf.placeholder = @"输入6-16位登录密码";
+            }else {
+                self.phoneNumTf = imagetextfield.textfield;
+                self.phoneNumTf.placeholder = @"输入账号";
+                self.phoneNumTf.keyboardType = UIKeyboardTypeNumberPad;
+            }
+            [self.view addSubview:imagetextfield];
+            [textfieldArray addObject:imagetextfield.textfield];
+            textFieldRect = imagetextfield.frame;
+        }
+        
+        UITapGestureRecognizer*tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tap:)];
+        tap.numberOfTouchesRequired = 1;
+        [mainView addGestureRecognizer:tap];
+        
+        //登录按钮
+        UIButton *btn = [[UIButton alloc]initWithFrame:CGRectMake(15,height+(UI_SCREEN_HEIGHT/15+20)*2 + 20, UI_SCREEN_WIDTH-30, 40)];
+        btn.backgroundColor = App_Main_Color;
+        [btn setTitle:@"登录" forState:UIControlStateNormal];
+        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        btn.layer.cornerRadius = 3;
+        [btn addTarget:self action:@selector(goLogin) forControlEvents:UIControlEventTouchUpInside];
+        [mainView addSubview:btn];
+       
+        //找回密码按钮
+        UIButton *FindpassBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+        FindpassBtn.frame = CGRectMake(UI_SCREEN_WIDTH-12-80, CGRectGetMaxY(btn.frame)+10, 80, 30);
+        [FindpassBtn setTitle:@"忘记密码?" forState:UIControlStateNormal];
+        [FindpassBtn setTitleColor:App_Main_Color forState:UIControlStateNormal];
+        FindpassBtn.titleLabel.font = [UIFont systemFontOfSize:16.0];
+        FindpassBtn.backgroundColor = [UIColor clearColor];
+        [FindpassBtn addTarget:self action:@selector(goEditPwd) forControlEvents:UIControlEventTouchUpInside];
+        [mainView addSubview:FindpassBtn];
+        
+        _registrationView = [[UIButton alloc] initWithFrame:CGRectMake(0, UI_SCREEN_HEIGHT - 50, UI_SCREEN_WIDTH, 50)];
+        _registrationView.backgroundColor = WHITE_COLOR2;
+        [_registrationView addTarget:self action:@selector(goRegisterVC) forControlEvents:UIControlEventTouchUpInside];
+        [mainView addSubview:_registrationView];
+        
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 15, UI_SCREEN_WIDTH, 20)];
+        label.textColor = Color161616;
+        label.attributedText = [@"还没保轩账号? 去注册" String:@"去注册" Color:App_Main_Color];
+        label.font = [UIFont systemFontOfSize:14];
+        label.textAlignment = NSTextAlignmentCenter;
+        [_registrationView addSubview:label];
+    }
+    return self;
+}
+
+- (void)textField:(UITextField *)textField {
+    if (_phoneNumTf.text.length == 11) {
+        [_passWordTf becomeFirstResponder];
+    }
+}
+
+- (void)pop:(UIButton *)sender {
+
+}
+
+
+//视图已经成功在屏幕上渲染完成了
+-(void)viewDidAppear:(BOOL)animated{
+    [super viewDidAppear:animated];
+    
+    if ([[[PreferenceManager sharedManager] preferenceForKey:@"AutoKeyWord"] boolValue]) {
+        [self checkLoad:0];
+    }
+}
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:animated];
+//    self.navigationController.navigationBarHidden=YES;
+    self.title = @"登录";
+    [self showTabView:NO];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [self missKeyBoard];
+}
+
+-(void)viewDidDisappear:(BOOL)animated{
+    
+//    self.navigationController.navigationBarHidden=NO;
+    [super viewDidDisappear:animated];
+}
+#pragma mark 是否隐藏下方tabbar
+-(void)showTabView:(BOOL)show{
+    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    CustomTabBarController *tab = delegate.tabBarController;
+    [tab showTabView:show animated:YES];
+}
+
+#pragma  mark  点击事件
+-(void)tap:(id)sender
+{
+    for (int i=0; i<[textfieldArray count]; i++) {
+        UITextField *textField = (UITextField *)[textfieldArray objectAtIndex:i];
+        [textField resignFirstResponder];
+    }
+}
+-(void)backLogin:(UIButton *)btn{
+    if (self.isShowTab) {
+        [self showTabView:YES];
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+-(void)goEditPwd
+{
+    BXEditPassWordViewController* vc = [[BXEditPassWordViewController alloc] init];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+-(void)RememberKey:(UIButton *)btn
+{
+    btn.selected = !btn.selected;
+    if (btn.selected == YES) {
+        
+    }else{
+        AutoBtn.selected=NO;
+    }
+}
+-(void)remberTapKey:(id)sender{
+    RememberBtn.selected = !RememberBtn.selected;
+    if (RememberBtn.selected == YES) {
+        
+    }else{
+        AutoBtn.selected=NO;
+    }
+}
+-(void)AutoTapKey:(id)sender{
+    AutoBtn.selected = !AutoBtn.selected;
+    if (AutoBtn.selected) {
+        RememberBtn.selected=YES;
+    }else{
+    }
+}
+-(void)AutoKey:(UIButton *)btn
+{
+    btn.selected = !btn.selected;
+    if (btn.selected == YES) {
+        RememberBtn.selected=YES;
+        
+    }else{
+        
+    }
+}
+#pragma  mark http
+-(void)checkLoad:(int) type{
+    
+    [SVProgressHUD show];
+    NSString *url=MOBILE_SERVER_URL(@"login.php");
+    NSString *phone = ((UITextField*)[textfieldArray objectAtIndex:0]).text;
+    NSString *password = ((UITextField*)[textfieldArray objectAtIndex:1]).text;
+    TokenURLRequest *request = [[TokenURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+    NSString *body;
+    //将type记录，用于后期的自动登录
+    //[[PreferenceManager sharedManager] setPreference:[NSString stringWithFormat:@"%d",type] forKey:@"type"];
+//    if (0 == type) {//普通登录，type为0
+//        body = [NSString stringWithFormat:@"username=%@&password=%@&type=%d",name , [NSString md5:key],type];
+//    }else{//QQ、微信、微博登录，type分别为1、2、3
+//        body = [NSString stringWithFormat:@"openid=%@&access_token=%@&type=%d",openid,accessToken,type];
+//    }
+    body = [NSString stringWithFormat:@"phone_num=%@&password=%@",phone, [NSString md5:password]];
+    DLog(@"body:%@",body);
+    [request setHTTPMethod: @"POST"];
+    [request setHTTPBody: [body dataUsingEncoding: NSUTF8StringEncoding]];
+    
+    AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    op.responseSerializer = [AFJSONResponseSerializer serializer];
+    [op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DLog(@"responseObject:%@",responseObject);
+        
+        if ([[responseObject objectForKey:@"is_success"] intValue] == 1) {
+            [[PreferenceManager sharedManager] setPreference:phone forKey:@"phone_num"];
+            [[PreferenceManager sharedManager] setPreference:[responseObject objectForKey:@"token"] forKey:@"token"];
+            [[PreferenceManager sharedManager] setPreference:phone forKey:@"pushId"];
+            [[PreferenceManager sharedManager] setPreference:self.phoneNumTf.text forKey:@"userPhone"];
+            [APService setAlias:self.phoneNumTf.text callbackSelector:nil object:self];
+            [self didLogin:responseObject];
+        }else {
+            [SVProgressHUD showErrorWithStatus:[responseObject objectForKey:@"info"] duration:1.5f];
+        }
+//        if ([[responseObject objectForKey:@"status"] intValue] == 0) {
+//            [self loginFailed:[responseObject objectForKey:@"info"]];
+//        }else if ([[responseObject objectForKey:@"status"] intValue] == 1){
+//            
+//            if (type == 0) {
+//                [[PreferenceManager sharedManager] setPreference:name forKey:@"pushId"];
+//                [[PreferenceManager sharedManager] setPreference:self.phoneNumTf.text forKey:@"userPhone"];
+//                [APService setAlias:self.phoneNumTf.text callbackSelector:nil object:self];
+//                
+//                NSString *token = [NSString stringWithFormat:@"%@",[responseObject objectForKey:@"token"]];
+//                NSString *decodeStr = [token base64DecodedString];
+//                NSString *isVipStr = [NSString stringWithFormat:@"%@",[[decodeStr componentsSeparatedByString:@"|"] lastObject]];
+//                DLog(@" -- isvip:%@",isVipStr);
+//                if ([isVipStr isEqualToString:@"1"]) {
+//                    [[PreferenceManager sharedManager] setPreference:@(YES) forKey:@"isvip"];
+//                }else {
+//                    [[PreferenceManager sharedManager] setPreference:nil forKey:@"isvip"];
+//                }
+//                
+//                if (self.successBlock) {
+//                    self.successBlock(self.selectSetPayPassword);
+//                }
+//            }else{
+//                [[PreferenceManager sharedManager] setPreference:openid forKey:@"pushId"];
+//            }
+
+            
+//            [[PreferenceManager sharedManager] setPreference:[responseObject valueForKey:@"username"] forKey:@"chargeUserID"];
+//            [self didLogin:responseObject];
+//            if ([[responseObject objectForKey:@"is_first_login"] intValue] == 1) {
+////                //上传QQ头像
+////                [self QQheadImage];
+////                //上传QQ昵称
+////                [self QQnickname];
+//            }
+//        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"error:%@",error);
+        [SVProgressHUD showErrorWithStatus:@"登录失败"];
+//        [SVProgressHUD dismiss];
+    }];
+    [op start];
+}
+-(void)checkShouQuanLogin:(NSInteger)type
+{
+    
+    [SVProgressHUD show];
+    NSString *url=MOBILE_SERVER_URL(@"getShouquanInfo.php");
+    
+    NSString *accessToken = [[PreferenceManager sharedManager] preferenceForKey:@"access_token"];
+    NSString *openid = [[PreferenceManager sharedManager] preferenceForKey:@"openid"];
+    
+    TokenURLRequest *request = [[TokenURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+    //将type记录，用于后期的自动登录
+    [[PreferenceManager sharedManager] setPreference:[NSString stringWithFormat:@"%d",(int)type] forKey:@"type"];
+    
+    //QQ、微信、微博登录，type分别为1、2、3
+    NSString * body = [NSString stringWithFormat:@"openid=%@&access_token=%@&type=%d",openid,accessToken,(int)type];
+    
+    DLog(@"body:%@",body);
+    [request setHTTPMethod: @"POST"];
+    [request setHTTPBody: [body dataUsingEncoding: NSUTF8StringEncoding]];
+    
+    AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    op.responseSerializer = [AFJSONResponseSerializer serializer];
+    [op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DLog(@"responseObject:%@",responseObject);
+        if ([[responseObject objectForKey:@"status"] intValue] == 0) {
+            [SVProgressHUD showErrorWithStatus:[responseObject objectForKey:@"info"] duration:1.5f];
+        }else if ([[responseObject objectForKey:@"status"] intValue] == 1){
+
+            [self didShouQuanLogin:responseObject];
+            
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"error:%@",error);
+        [SVProgressHUD showErrorWithStatus:@"登录失败"];
+    }];
+    [op start];
+    
+}
+-(void)shouquanEnd {
+    if (AutoBtn.selected) {
+        [[PreferenceManager sharedManager]setPreference:@(YES) forKey:@"AutoKeyWord"];
+    }
+    if (self.isShowTab) {
+        [self showTabView:YES];
+    }
+    
+    if (self.alreadyBlock) {
+        self.alreadyBlock();
+    }
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)didShouQuanLogin:(id)response
+{
+    NSDictionary *temp=(NSDictionary *)response;
+    if ( [[temp valueForKey:@"is_first_login"] intValue]==1) {
+        [SVProgressHUD dismiss];
+        
+        NSString *shouquan_url = [NSString stringWithFormat:@"%@",[temp objectForKey:@"shouquan_url"]];
+        LoginBindViewController *vc = [[LoginBindViewController alloc] init];
+        [vc loadWebView:shouquan_url];
+        
+        vc.loginbingBlock = ^(BOOL finish ,NSDictionary *dic){
+            NSLog(@"得到的用户信息是%@",dic);
+            [self shouquanEnd];
+        };
+        [self.navigationController pushViewController:vc animated:YES];
+         
+        return;
+    }else{
+        [SVProgressHUD dismissWithSuccess:@"登录成功！"];
+        [[PreferenceManager sharedManager] setPreference:[response objectForKey:@"username"] forKey:@"chargeUserID"];
+        [[PreferenceManager sharedManager] setPreference:[response objectForKey:@"username"] forKey:@"pushId"];
+        [[PreferenceManager sharedManager] setPreference:[response objectForKey:@"avatar"] forKey:@"avatar"];
+        [[PreferenceManager sharedManager] setPreference:[response objectForKey:@"alias"] forKey:@"alias"];
+        [[PreferenceManager sharedManager] setPreference:[response objectForKey:@"token"] forKey:@"token"];
+        [[PreferenceManager sharedManager] setPreference:@(YES) forKey:@"didLogin"];
+        
+
+        if (AutoBtn.selected) {
+            [[PreferenceManager sharedManager]setPreference:@(YES) forKey:@"AutoKeyWord"];
+            [[PreferenceManager sharedManager]setPreference:@(YES) forKey:@"rememberKeyWord"];
+            
+        }else if(RememberBtn.selected)
+        {
+            [[PreferenceManager sharedManager]setPreference:@(YES) forKey:@"rememberKeyWord"];
+            
+        }
+        if (self.isShowTab) {
+            [self showTabView:YES];
+        }
+        
+        if (self.alreadyBlock) {
+            self.alreadyBlock();
+        }
+
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+#pragma  mark 私有
+-(void)missKeyBoard
+{
+    for (int i=0; i<[textfieldArray count]; i++) {
+        UITextField *textField = (UITextField *)[textfieldArray objectAtIndex:i];
+        [textField resignFirstResponder];
+    }
+}
+- (void)ShowAlertViewWithTitle:(NSString *)title message:(NSString *)message delegate:(id)delegate cancelButtonTitle:(NSString *)cancelButtonTitle otherButtonTitles:(NSString *)otherButtonTitles
+{
+    UIAlertView *alertView  = [[UIAlertView alloc] initWithTitle:title message:message delegate:delegate cancelButtonTitle:cancelButtonTitle otherButtonTitles:otherButtonTitles,nil];
+    [alertView show];
+}
+- (void)didLogin:(id)response
+{
+    
+    [SVProgressHUD dismissWithSuccess:@"登录成功!"];
+//    [[PreferenceManager sharedManager] setPreference:[response objectForKey:@"avatar"] forKey:@"avatar"];
+//    
+//    
+//    //is_guazhang 1表示开通l了  0表示未开通  现在会增加一个2 表示提出了申请 但是处于审核中  开通了的点击代付图表 直接跳转到代付界面 未开通的 弹出申请界面  审核的 给提示
+//    NSString *is_guazhang=[NSString stringWithFormat:@"%@",[response objectForKey:@"is_guazhang"]];
+//    [[PreferenceManager sharedManager] setPreference:is_guazhang forKey:@"is_guazhang"];
+//    
+//    
+//    NSString *string=[NSString stringWithFormat:@"%@",[response objectForKey:@"is_manager"]];
+//    [[PreferenceManager sharedManager] setPreference:string forKey:@"isManager"];
+//    
+    [[PreferenceManager sharedManager] setPreference:[response objectForKey:@"alias"] forKey:@"alias"];
+//    [[PreferenceManager sharedManager] setPreference:[response objectForKey:@"token"] forKey:@"token"];
+    [[PreferenceManager sharedManager] setPreference:@(YES) forKey:@"didLogin"];
+//    if (AutoBtn.selected) {
+//        [[PreferenceManager sharedManager]setPreference:@(YES) forKey:@"AutoKeyWord"];
+//        [[PreferenceManager sharedManager]setPreference:@(YES) forKey:@"rememberKeyWord"];
+//        [[PreferenceManager sharedManager]setPreference:((UITextField*)[textfieldArray objectAtIndex:1]).text forKey:@"keyword"];
+//    }else if(RememberBtn.selected)
+//    {
+//        [[PreferenceManager sharedManager]setPreference:@(YES) forKey:@"rememberKeyWord"];
+//        [[PreferenceManager sharedManager]setPreference:((UITextField*)[textfieldArray objectAtIndex:1]).text forKey:@"keyword"];
+//    }
+//    else
+//    {
+//         [[PreferenceManager sharedManager]setPreference:@(NO) forKey:@"rememberKeyWord"];
+//    }
+//    
+    if (self.isShowTab) {
+        [self showTabView:YES];
+    }
+    
+    if (self.alreadyBlock) {
+        self.alreadyBlock();
+    }
+
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+
+#pragma mark textfield delegate
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    Image_Textfield *imageIextfield = [textfieldArray objectAtIndex:textField.tag];
+    
+    
+    
+    CGPoint textFieldOriginInsuperview= [imageIextfield convertPoint:textField.frame.origin toView:[[[UIApplication sharedApplication] delegate] window]];
+    NSLog(@"keybordHeight:%f",textFieldOriginInsuperview.y);
+    keybordHeight = 350 -(UI_SCREEN_HEIGHT-textFieldOriginInsuperview.y-textField.frame.size.height);
+    
+    [UIView animateWithDuration:0.375 animations:^{
+        _registrationView.frame = CGRectMake(0, UI_SCREEN_HEIGHT - 50 - 216, UI_SCREEN_WIDTH, 50);
+    }];
+    
+    if (keybordHeight<=0) {
+        return;
+    }else{
+        [UIView animateWithDuration:0.375 animations:^{
+            CGRect rect = self.view.frame;
+            rect.origin.y -= keybordHeight;
+            rect.size.height += keybordHeight;
+            self.view.frame = rect;
+        }];
+    }
+    
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    [UIView animateWithDuration:0.375 animations:^{
+        _registrationView.frame = CGRectMake(0, UI_SCREEN_HEIGHT - 50, UI_SCREEN_WIDTH, 50);
+    }];
+    
+    if (keybordHeight<=0) {
+        return;
+    }
+    [UIView animateWithDuration:0.375 animations:^{
+        CGRect rect = self.view.frame;
+        rect.origin.y += keybordHeight;
+        rect.size.height -= keybordHeight;
+        
+        self.view.frame = rect;
+    }];
+}
+
+-(UIImage *)drawImage{
+    
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(44, 44), 0, 0);
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    //Set the stroke (pen) color
+    CGContextSetStrokeColorWithColor(context, App_Main_Color.CGColor);
+    //Set the width of the pen mark
+    CGContextSetLineWidth(context, 1.0);
+    CGContextMoveToPoint(context, 10.0, 10);
+    CGContextAddLineToPoint(context, 30, 30.0);
+    CGContextStrokePath(context);
+    
+    CGContextMoveToPoint(context, 30, 10);
+    CGContextAddLineToPoint(context, 10, 30.0);
+    CGContextStrokePath(context);
+    
+    UIImage * image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return image;
+}
+
+// 验证手机号
+- (BOOL)validateMobile:(NSString* )mobileNumber {
+    if ([mobileNumber length] == 0) {
+        [SVProgressHUD showErrorWithStatus:@"请输入您的手机号"];
+        return NO;
+    }
+    
+    if ([mobileNumber length] != 11) {
+        [SVProgressHUD showErrorWithStatus:@"请输入正确格式的手机号码"];
+        return NO;
+    }
+    return YES;
+}
+
+-(void)goLogin {
+    self.phoneNumTf.text=[self.phoneNumTf.text stringByReplacingOccurrencesOfString:@" " withString:@""];
+    self.passWordTf.text=[self.passWordTf.text stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    if (![self validateMobile:self.phoneNumTf.text]) {
+        return;
+    }
+    
+    NSString *message;
+    if (self.passWordTf.text.length < 6 || self.passWordTf.text.length > 20) {
+        message = @"请输入6-16位登录密码";
+    }
+    if([self.passWordTf.text isEqualToString:@""]) {
+        message = @"请输入密码";
+    }
+    if (message) {
+        [SVProgressHUD showErrorWithStatus:message];
+        return;
+    }
+
+    [LogInAndLogOut LoginWithAccount:self.phoneNumTf.text password:self.passWordTf.text FinishBlock:^{
+        if (self.isShowTab) {
+            [self showTabView:YES];
+        }
+        if (self.alreadyBlock) {
+            self.alreadyBlock();
+        }
+        
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }];
+}
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    /* 是否设置支付密码 */
+    self.selectSetPayPassword = buttonIndex == 1;
+    [self checkLoad:0];
+}
+
+//注册账号
+- (void)goRegisterVC {
+    BXRegisterViewController *viewController = [[BXRegisterViewController alloc]init];
+    viewController.delegate = self;
+    [self.navigationController pushViewController:viewController animated:YES];
+}
+
+#pragma mark BXRegisterViewControllerDelegate 
+- (void)account:(NSString *)account Password:(NSString *)password {
+    UITextField *phone = (UITextField*)[textfieldArray objectAtIndex:0];
+    UITextField *passwordTF = (UITextField*)[textfieldArray objectAtIndex:1];
+    phone.text = account;
+    passwordTF.text = password;
+    if (account && password) {
+        [self checkLoad:0];
+    }
+}
+
+
+@end

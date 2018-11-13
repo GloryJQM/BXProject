@@ -1,0 +1,14 @@
+//
+//  NSString+URL.h
+//  MobileInsurance
+//
+//  Created by Cai on 14-7-30.
+//  Copyright (c) 2014年 jiang. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface NSString(URL)
+- (NSString *)URLEncodedString;
+
+@end

@@ -1,0 +1,119 @@
+K 25
+svn:wc:ra_dav:version-url
+V 154
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers
+END
+BMKSearchBase.h
+K 25
+svn:wc:ra_dav:version-url
+V 170
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers/BMKSearchBase.h
+END
+BMKShareUrlSearchOption.h
+K 25
+svn:wc:ra_dav:version-url
+V 180
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers/BMKShareUrlSearchOption.h
+END
+BMKPoiSearchOption.h
+K 25
+svn:wc:ra_dav:version-url
+V 175
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers/BMKPoiSearchOption.h
+END
+BMKSuggestionSearchOption.h
+K 25
+svn:wc:ra_dav:version-url
+V 182
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers/BMKSuggestionSearchOption.h
+END
+BMKGeocodeType.h
+K 25
+svn:wc:ra_dav:version-url
+V 171
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers/BMKGeocodeType.h
+END
+BMKShareURLSearch.h
+K 25
+svn:wc:ra_dav:version-url
+V 174
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers/BMKShareURLSearch.h
+END
+BMKSearchVersion.h
+K 25
+svn:wc:ra_dav:version-url
+V 173
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers/BMKSearchVersion.h
+END
+BMKDistrictSearch.h
+K 25
+svn:wc:ra_dav:version-url
+V 174
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers/BMKDistrictSearch.h
+END
+BMKRouteSearchOption.h
+K 25
+svn:wc:ra_dav:version-url
+V 177
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers/BMKRouteSearchOption.h
+END
+BMKPoiSearch.h
+K 25
+svn:wc:ra_dav:version-url
+V 169
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers/BMKPoiSearch.h
+END
+BMKSuggestionSearch.h
+K 25
+svn:wc:ra_dav:version-url
+V 176
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers/BMKSuggestionSearch.h
+END
+BMKPoiSearchType.h
+K 25
+svn:wc:ra_dav:version-url
+V 173
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers/BMKPoiSearchType.h
+END
+BMKBusLineSearchOption.h
+K 25
+svn:wc:ra_dav:version-url
+V 179
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers/BMKBusLineSearchOption.h
+END
+BMKRouteSearch.h
+K 25
+svn:wc:ra_dav:version-url
+V 171
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers/BMKRouteSearch.h
+END
+BMKGeocodeSearchOption.h
+K 25
+svn:wc:ra_dav:version-url
+V 179
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers/BMKGeocodeSearchOption.h
+END
+BMKRouteSearchType.h
+K 25
+svn:wc:ra_dav:version-url
+V 175
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers/BMKRouteSearchType.h
+END
+BMKBusLineSearch.h
+K 25
+svn:wc:ra_dav:version-url
+V 173
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers/BMKBusLineSearch.h
+END
+BMKSearchComponent.h
+K 25
+svn:wc:ra_dav:version-url
+V 175
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers/BMKSearchComponent.h
+END
+BMKGeocodeSearch.h
+K 25
+svn:wc:ra_dav:version-url
+V 173
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Search.framework/Headers/BMKGeocodeSearch.h
+END

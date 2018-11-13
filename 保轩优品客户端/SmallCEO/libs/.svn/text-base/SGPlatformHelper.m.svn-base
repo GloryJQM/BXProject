@@ -1,0 +1,60 @@
+//
+//  SGPlatformHelper.m
+//  DeKang
+//
+//  Created by quanmai on 16/4/18.
+//  Copyright © 2016年 quanmai. All rights reserved.
+//
+
+#import "SGPlatformHelper.h"
+#import <BaiduMapAPI_Base/BMKMapManager.h>
+
+static SGPlatformHelper *shareHelper = nil;
+
+@interface SGPlatformHelper ()<BMKGeneralDelegate>
+
+@end
+@implementation SGPlatformHelper
++ (instancetype)shareHelper {
+    if(shareHelper == nil){
+        shareHelper = [[[self class] alloc] init];
+    }
+    return shareHelper;
+}
+
++ (void)registerAppkeyWithLaunchOptions:(NSDictionary *)launchOptions {
+    [[[self class] shareHelper] registerAppkeyWithLaunchOptions:[NSDictionary dictionaryWithDictionary:launchOptions]];
+}
+
+- (void)registerAppkeyWithLaunchOptions:(NSDictionary *)launchOptions {
+    /**百度地图*/
+    NSString *baiduMapKey = @"Tf35VTFsOvQtNGXBAbIzE5SFmRGZtljz";
+    
+    BMKMapManager *mapManager = [[BMKMapManager alloc]init];
+    BOOL ret = [mapManager start:baiduMapKey generalDelegate:[[self class] shareHelper]];
+    if (ret) {
+        DLog(@"百度地图 注册appid成功");
+    }else{
+        DLog(@"百度地图 start failed!");
+    }
+}
+
+#pragma mark - 百度地图回调代理 设置generalDelegate= self会调用
+- (void)onGetNetworkState:(int)iError {
+    if (0 == iError) {
+        DLog(@"联网成功");
+    }else{
+        DLog(@"onGetNetworkState %d",iError);
+    }
+    
+}
+
+- (void)onGetPermissionState:(int)iError {
+    if (0 == iError) {
+        DLog(@"授权成功");
+    }else {
+        DLog(@"onGetPermissionState %d",iError);
+    }
+}
+
+@end

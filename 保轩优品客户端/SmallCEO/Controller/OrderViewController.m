@@ -1,0 +1,358 @@
+//
+//  OrderViewController.m
+//  SmallCEO
+//
+//  Created by 俊严 on 15/8/19.
+//  Copyright (c) 2015年 lemuji. All rights reserved.
+//
+
+#import "OrderViewController.h"
+#import "OrderListCell.h"
+#import "OrderHeaderView.h"
+#import "SuspendedView.h"
+#import "MJRefresh.h"
+#import "LogisticsViewController.h"
+#import "OrderPayViewController.h"
+#import "OrderListDetailsViewController.h"
+@interface OrderViewController ()<SuspendedViewDelegate, UITableViewDelegate, UITableViewDataSource, MJRefreshBaseViewDelegate>
+@property (nonatomic, strong) NSMutableArray *dataArray;
+@property (nonatomic, strong) SuspendedView *suspendedView;
+@property (nonatomic, strong) UITableView *tableView;
+
+@property (strong,nonatomic)   MJRefreshHeaderView *header;
+@property (strong,nonatomic)   MJRefreshFooterView *footer;
+@property (nonatomic, assign) NSInteger curPage;
+@property (nonatomic, strong) UIImageView *imageView;
+@end
+
+@implementation OrderViewController
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self getOrderListData];
+}
+
+//懒加载创建顶部按钮
+- (SuspendedView *)suspendedView {
+    if (!_suspendedView) {
+        _suspendedView = [[SuspendedView alloc] initWithSuspendedViewStyle:SuspendedViewStyleVaule3];
+        _suspendedView.frame = CGRectMake(0, 0, UI_SCREEN_WIDTH, SuspendedViewHeight);
+        _suspendedView.delegate = self;
+        _suspendedView.items = @[@"全部", @"待付款",@"待收货",@"已完成",@"已取消"];
+        _suspendedView.backgroundColor = [UIColor whiteColor];
+        _suspendedView.currentItemIndex = 0;
+        
+        UIView *line = [[UIView alloc]initWithFrame:CGRectMake(0, SuspendedViewHeight-0.5, UI_SCREEN_WIDTH, 0.5)];
+        line.backgroundColor = [UIColor lightGrayColor];
+        [_suspendedView addSubview:line];
+    }
+    return _suspendedView;
+}
+
+- (void)dealloc {
+    [_header free];
+    [_footer free];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.view.backgroundColor = [UIColor whiteColor];
+    self.title = @"我的订单";
+    self.curPage = 1;
+    self.dataArray = [NSMutableArray array];
+    [self creationTableView];
+    [self getOrderListData];
+}
+
+- (void)creationTableView {
+    [self.view addSubview:self.suspendedView];
+    
+    CGFloat height = _isMyInfo ? UI_SCREEN_HEIGHT - _suspendedView.maxY - 64: UI_SCREEN_HEIGHT - _suspendedView.maxY - 44 - 64;
+    self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, _suspendedView.maxY, UI_SCREEN_WIDTH, height)];
+    _tableView.backgroundColor = WHITE_COLOR2;
+    _tableView.separatorStyle = NO;
+    _tableView.delegate = self;
+    _tableView.dataSource = self;
+    [self.view addSubview:_tableView];
+    
+    [_tableView registerClass:[OrderListCell class] forCellReuseIdentifier:@"OrderListCell"];
+    _tableView.sectionHeaderHeight = 60;
+    
+    _header = [[MJRefreshHeaderView alloc]init];
+    _header.delegate = self;
+    _header.scrollView = _tableView;
+    
+    _footer = [[MJRefreshFooterView alloc]init];
+    _footer.delegate = self;
+    _footer.scrollView = _tableView;
+    
+    self.imageView = [[UIImageView alloc]initWithFrame:CGRectMake((UI_SCREEN_WIDTH - 145) / 2, 100, 145, 170)];
+    _imageView.image = [UIImage imageNamed:@"icon-tishi3@2x"];
+    [_tableView addSubview:_imageView];
+    _imageView.hidden = YES;
+    
+    _tableView.contentOffset = CGPointMake(0, 1);
+    
+}
+//获取订单列表数据
+- (void)getOrderListData {
+    DLog(@"%ld", (long)self.suspendedView.currentItemIndex);
+    NSString*body = [NSString stringWithFormat:@"status=%ld&act=1&p=%ld",(long)self.suspendedView.currentItemIndex, (long)self.curPage];
+    [RCLAFNetworking postWithUrl:@"orderForUserNew.php" BodyString:body isPOST:YES success:^(id responseObject) {
+        DLog(@"我的订单: == %@", responseObject);
+        [_footer endRefreshing];
+        [_header endRefreshing];
+        NSArray *listArray = responseObject[@"list"];
+        if (self.curPage == 1) {
+            [self.dataArray removeAllObjects];
+        }
+        for (NSDictionary *dic in listArray) {
+            [self.dataArray addObject:dic];
+        }
+        [_tableView reloadData];
+        if (self.curPage == 1) {
+            _tableView.contentOffset = CGPointMake(0, 1);
+        }
+        [self backImageView];
+        
+    } fail:^(NSError *error) {
+        [_footer endRefreshing];
+        [_header endRefreshing];
+    }];
+}
+
+- (void)backImageView {
+    if (self.dataArray.count > 0) {
+        _imageView.hidden = YES;
+    }else {
+        _imageView.hidden = NO;
+    }
+}
+
+#pragma mark SuspendedViewDelegate
+- (void)didClickView:(SuspendedView *)view atItemIndex:(NSInteger)index {
+    self.curPage = 1;
+    [self getOrderListData];
+}
+
+#pragma mark UITableViewDataSource
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return self.dataArray.count;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    NSDictionary *dic = self.dataArray[section];
+    NSArray *array = dic[@"order_goods_info"];
+    return array.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    OrderListCell *cell = [tableView dequeueReusableCellWithIdentifier:@"OrderListCell" forIndexPath:indexPath];
+    NSDictionary *dic = self.dataArray[indexPath.section];
+    NSArray *array = dic[@"order_goods_info"];
+    NSDictionary *dataDic = array[indexPath.row];
+    NSInteger is_point_type = [dic[@"is_point_type"] integerValue];
+    [cell setDictionary:dataDic is_point_type:is_point_type];
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 164;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    NSDictionary *dic = self.dataArray[section];
+    OrderHeaderView *orderHeadView = [tableView dequeueReusableHeaderFooterViewWithIdentifier:@"orderHeadView"];
+    if (!orderHeadView) {
+        orderHeadView =  [[OrderHeaderView alloc] initWithReuseIdentifier:@"orderHeadView"];
+    }
+    [orderHeadView setHeaderModel:dic];
+    return orderHeadView;
+
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    NSDictionary *dic = self.dataArray[section];
+    
+    UIView *backView = [[UIView alloc] init];
+    backView.backgroundColor = [UIColor whiteColor];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 15, UI_SCREEN_WIDTH - 30, 20)];
+    label.numberOfLines = 0;
+    label.textColor = Color74828B;
+    
+    NSString *order_sum = [NSString stringWithFormat:@"%@", dic[@"order_sum"]];
+    
+    NSInteger is_point_type = [dic[@"is_point_type"] integerValue];
+    NSString *order_freight = [NSString stringWithFormat:@"%@", dic[@"order_freight"]];
+    NSString *number = [NSString stringWithFormat:@"%@", dic[@"goods_total_num"]];
+    if ([order_freight floatValue] > 0) {
+        if (is_point_type == 0) {
+            NSString *string = [NSString stringWithFormat:@"共计%@件商品, 合计 %@(含运费%@)", number,[order_sum moneyPoint:is_point_type], [order_freight money]];
+            label.attributedText = [string String:[NSString stringWithFormat:@"%@(含运费%@)", [order_sum moneyPoint:is_point_type], [order_freight money]] Color:Color3D4E56];
+        }else {
+            NSString *string = [NSString stringWithFormat:@"共计%@件商品, 合计 %@(运费%@)", number,[order_sum moneyPoint:is_point_type], [order_freight money]];
+            label.attributedText = [string String:[NSString stringWithFormat:@"%@(运费%@)", [order_sum moneyPoint:is_point_type], [order_freight money]] Color:Color3D4E56];
+        }
+        
+    }else {
+         NSString *string = [NSString stringWithFormat:@"共计%@件商品, 合计 %@", number,[order_sum moneyPoint:is_point_type]];
+        label.attributedText = [string String:[order_sum moneyPoint:is_point_type] Color:Color3D4E56];
+    }
+    
+    label.textAlignment = NSTextAlignmentRight;
+    label.font = [UIFont systemFontOfSize:14];
+    [backView addSubview:label];
+    
+    [backView addLineWithY:49.5];
+    
+    NSString *status_value = [NSString stringWithFormat:@"%@", dic[@"status_value"]];
+    NSArray *titlaAry = [status_value getStatusArray];
+    for (int i = 0; i < titlaAry.count; i++) {
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        button.frame = CGRectMake(UI_SCREEN_WIDTH - (88 + 15) * (titlaAry.count - i), label.maxY + 22, 88, 40);
+        [button setTitle:titlaAry[i] forState:UIControlStateNormal];
+        button.titleLabel.font = [UIFont systemFontOfSize:14];
+        [button addTarget:self action:@selector(handleButton:) forControlEvents:UIControlEventTouchUpInside];
+        [backView addSubview:button];
+        button.layer.cornerRadius = 2;
+        button.layer.masksToBounds = YES;
+        button.tag = section;
+        if (i % 2 == 0) {
+            button.layer.borderColor = App_Main_Color.CGColor;
+            button.layer.borderWidth = 1;
+            [button setTitleColor:App_Main_Color forState:UIControlStateNormal];
+        }else {
+            button.backgroundColor = App_Main_Color;
+        }
+    }
+    if (self.dataArray.count - 1 == section) {
+        CGSize size = _tableView.contentSize;
+        size.height = size.height + 120;
+        _tableView.contentSize = size;
+    }
+    return backView;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    NSDictionary *dic = self.dataArray[section];
+    NSString *status_value = [NSString stringWithFormat:@"%@", dic[@"status_value"]];
+    NSArray *titlaAry = [status_value getStatusArray];
+    if (titlaAry.count > 0) {
+        return 110;
+    }
+    return 50;
+}
+
+- (void)handleButton:(UIButton *)sender {
+    NSString *string = [sender currentTitle];
+    NSString *order = [[self.dataArray objectAtIndex:sender.tag] objectForKey:@"order_id"];
+    if ([string isEqualToString:@"取消订单"]) {
+        [self postRemoveData:order];
+    }else if ([string isEqualToString:@"去支付"]) {
+        [self paymentOrder:sender.tag];
+    }else if ([string isEqualToString:@"确认收货"]) {
+        [self postConfirmGoodsData:order];
+    }else if ([string isEqualToString:@"删除订单"]) {
+        [self removeOrder:order];
+    }
+}
+
+//取消订单
+- (void)postRemoveData:(NSString *)order_id {
+    RCLAlertView *rclAlerView = [[RCLAlertView alloc]initWithTitle:nil contentText:@"确认取消订单?" leftButtonTitle:@"否" rightButtonTitle:@"是"];
+    rclAlerView.rightBlock = ^(){
+        NSString*body=[NSString stringWithFormat:@"act=3&order_id=%@",order_id];
+        [RCLAFNetworking postWithUrl:@"orderForUserNew.php" BodyString:body isPOST:YES success:^(id responseObject) {
+            [SVProgressHUD showSuccessWithStatus:responseObject[@"info"]];
+            self.curPage = 1;
+            [self getOrderListData];
+        } fail:nil];
+    };
+    [rclAlerView show];
+}
+
+//去支付
+- (void)paymentOrder:(NSInteger)index {
+    NSString *order = [[self.dataArray objectAtIndex:index] objectForKey:@"order_id"];
+    NSString *is_point_type = [[self.dataArray objectAtIndex:index] objectForKey:@"is_point_type"];
+    //获取支付方式
+    NSString*body=[NSString stringWithFormat:@"act=3&order_id=%@",order];
+    [RCLAFNetworking postWithUrl:@"orderApiNew.php" BodyString:body isPOST:YES success:^(id responseObject) {
+        OrderPayViewController *vc = [[OrderPayViewController alloc] init];
+        vc.patInfoDic = [responseObject objectForKey:@"pay_info"];
+        vc.is_point_type = [is_point_type integerValue];
+        vc.order_id = order;
+        vc.messageDic = responseObject[@"delivery_info"][@"express"];
+        [self.navigationController pushViewController:vc animated:YES];
+    } fail:nil];
+}
+
+//确认收货
+- (void)postConfirmGoodsData:(NSString *)order_id {
+    RCLAlertView *rclAlerView = [[RCLAlertView alloc]initWithTitle:nil contentText:@"确认收货?" leftButtonTitle:@"否" rightButtonTitle:@"是"];
+    rclAlerView.rightBlock = ^(){
+        NSString *body=[NSString stringWithFormat:@"act=2&order_id=%@",order_id];
+        [RCLAFNetworking postWithUrl:@"orderForUserNew.php" BodyString:body isPOST:YES success:^(id responseObject) {
+            [SVProgressHUD showSuccessWithStatus:@"已确认"];
+            self.curPage = 1;
+            [self getOrderListData];
+        } fail:nil];
+    };
+    [rclAlerView show];
+}
+
+//删除订单
+- (void)removeOrder:(NSString *)order_id {
+    RCLAlertView *rclAlerView = [[RCLAlertView alloc]initWithTitle:nil contentText:@"确认删除订单?" leftButtonTitle:@"否" rightButtonTitle:@"是"];
+    rclAlerView.rightBlock = ^(){
+        NSString *body=[NSString stringWithFormat:@"act=5&order_id=%@",order_id];
+        [RCLAFNetworking postWithUrl:@"orderForUserNew.php" BodyString:body isPOST:YES success:^(id responseObject) {
+            [SVProgressHUD showSuccessWithStatus:@"已删除"];
+            self.curPage = 1;
+            [self getOrderListData];
+        } fail:nil];
+    };
+    [rclAlerView show];
+    
+    
+}
+#pragma mark UITableViewDelegate
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    NSString *body=[NSString stringWithFormat:@"act=4&order_id=%@", self.dataArray[indexPath.section][@"order_id"]];
+    [RCLAFNetworking postWithUrl:@"orderForUserNew.php" BodyString:body isPOST:YES success:^(id responseObject) {
+        OrderListDetailsViewController *vc = [[OrderListDetailsViewController alloc] init];
+        vc.dataDic = responseObject[@"order"];
+        [self.navigationController pushViewController:vc animated:YES];
+    } fail:nil];
+}
+
+//取消headerView粘性效果
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (scrollView == self.tableView) {
+        CGFloat sectionHeaderHeight = 60; //sectionHeaderHeight
+        CGFloat sectionFooterHeight = 110;
+        if (scrollView.contentOffset.y <= sectionHeaderHeight && scrollView.contentOffset.y >= 0){
+            scrollView.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, -sectionFooterHeight, 0);
+        } else if (scrollView.contentOffset.y >= sectionHeaderHeight) {
+            scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderHeight, 0, -sectionFooterHeight, 0);
+        }
+    }
+}
+
+- (void)refreshViewBeginRefreshing:(MJRefreshBaseView *)refreshView{
+    if(refreshView ==_header){
+        self.curPage = 1;
+        [self getOrderListData];
+    }else{
+        self.curPage++;
+        [self getOrderListData];
+    }
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+@end

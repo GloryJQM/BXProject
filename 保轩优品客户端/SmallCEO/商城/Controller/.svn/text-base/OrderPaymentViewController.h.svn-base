@@ -1,0 +1,14 @@
+//
+//  OrderPaymentViewController.h
+//  SmallCEO
+//
+//  Created by 任成龙 on 2017/9/27.
+//  Copyright © 2017年 lemuji. All rights reserved.
+//
+
+#import "BaseViewController.h"
+
+@interface OrderPaymentViewController : BaseViewController
+@property (nonatomic, copy) NSString *order_id;
+@property (nonatomic, strong) NSDictionary *pay_info;
+@end

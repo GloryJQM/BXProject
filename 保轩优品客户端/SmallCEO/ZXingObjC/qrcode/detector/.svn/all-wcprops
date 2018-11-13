@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/detector
+END
+ZXQRCodeDetector.h
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/detector/ZXQRCodeDetector.h
+END
+ZXQRCodeFinderPattern.m
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/detector/ZXQRCodeFinderPattern.m
+END
+ZXAlignmentPatternFinder.m
+K 25
+svn:wc:ra_dav:version-url
+V 146
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/detector/ZXAlignmentPatternFinder.m
+END
+ZXAlignmentPattern.h
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/detector/ZXAlignmentPattern.h
+END
+ZXQRCodeDetector.m
+K 25
+svn:wc:ra_dav:version-url
+V 138
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/detector/ZXQRCodeDetector.m
+END
+ZXFinderPatternFinder.h
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/detector/ZXFinderPatternFinder.h
+END
+ZXAlignmentPattern.m
+K 25
+svn:wc:ra_dav:version-url
+V 140
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/detector/ZXAlignmentPattern.m
+END
+ZXFinderPatternInfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/detector/ZXFinderPatternInfo.h
+END
+ZXFinderPatternFinder.m
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/detector/ZXFinderPatternFinder.m
+END
+ZXQRCodeFinderPattern.h
+K 25
+svn:wc:ra_dav:version-url
+V 143
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/detector/ZXQRCodeFinderPattern.h
+END
+ZXAlignmentPatternFinder.h
+K 25
+svn:wc:ra_dav:version-url
+V 146
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/detector/ZXAlignmentPatternFinder.h
+END
+ZXFinderPatternInfo.m
+K 25
+svn:wc:ra_dav:version-url
+V 141
+/bxup_ios/!svn/ver/1/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ZXingObjC/qrcode/detector/ZXFinderPatternInfo.m
+END

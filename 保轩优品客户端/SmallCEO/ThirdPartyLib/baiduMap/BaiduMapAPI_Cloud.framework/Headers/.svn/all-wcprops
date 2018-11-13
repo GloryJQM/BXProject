@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 153
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Cloud.framework/Headers
+END
+BMKCloudSearchComponent.h
+K 25
+svn:wc:ra_dav:version-url
+V 179
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Cloud.framework/Headers/BMKCloudSearchComponent.h
+END
+BMKCloudSearchInfo.h
+K 25
+svn:wc:ra_dav:version-url
+V 174
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Cloud.framework/Headers/BMKCloudSearchInfo.h
+END
+BMKCloudPOIList.h
+K 25
+svn:wc:ra_dav:version-url
+V 171
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Cloud.framework/Headers/BMKCloudPOIList.h
+END
+BMKCloudSearch.h
+K 25
+svn:wc:ra_dav:version-url
+V 170
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Cloud.framework/Headers/BMKCloudSearch.h
+END
+BMKCloudVersion.h
+K 25
+svn:wc:ra_dav:version-url
+V 171
+/bxup_ios/!svn/ver/59/%E4%BF%9D%E8%BD%A9%E4%BC%98%E5%93%81%E5%AE%A2%E6%88%B7%E7%AB%AF/SmallCEO/ThirdPartyLib/baiduMap/BaiduMapAPI_Cloud.framework/Headers/BMKCloudVersion.h
+END

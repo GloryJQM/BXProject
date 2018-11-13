@@ -1,0 +1,231 @@
+//
+//  NSString+Category.m
+//  SmallCEO
+//
+//  Created by 任成龙 on 2017/7/6.
+//  Copyright © 2017年 lemuji. All rights reserved.
+//
+
+#import "NSString+Category.h"
+
+@implementation NSString (Category)
+- (BOOL)isBlankString {
+    
+    if (self == nil || self == NULL) {
+        return NO;
+    }
+    if (![self isKindOfClass:[NSString class]]) {
+        return NO;
+    }
+    if ([self isKindOfClass:[NSNull class]]) {
+        return NO;
+    }
+    if ([self isEqual:[NSNull null]]) {
+        return NO;
+    }
+    if ([[self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] length]==0) {
+        return NO;
+    }
+    if ([self isEqualToString:@"(null)"]) {
+        return NO;
+    }
+    return YES;
+}
+
+//返回带.的价格 前后大小不同
+- (NSMutableAttributedString *)StringFontSize:(CGFloat)size {
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self];
+    NSString *string = [NSString stringWithFormat:@".%@", [[self componentsSeparatedByString:@"."] lastObject]];
+    NSRange range = [self rangeOfString:string];
+    [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:size] range:range];
+    return attributedString;
+}
+
+- (NSMutableAttributedString *)String:(NSString *)string Color:(UIColor *)color {
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:self];
+    if (![string isBlankString]) {
+        string = @"";
+    }
+    NSRange range = [self rangeOfString:string];
+    [attributedString addAttribute:NSForegroundColorAttributeName value:color range:range];
+    return attributedString;
+}
+
+- (NSNumberFormatter *)getNumberFormatter {
+    static NSNumberFormatter *formatter;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        formatter = [[NSNumberFormatter alloc] init];
+        formatter.numberStyle = NSNumberFormatterDecimalStyle;
+        [formatter setPositiveFormat:@"¥###,##0.00;"];
+    });
+    return formatter;
+}
+
+- (NSString *)money {
+    NSString *money = [NSString stringWithFormat:@"%@",self];
+    double doubleMoney = [money doubleValue];
+    if (self == nil || money.length == 0 || doubleMoney == 0) {
+        return @"¥0.00";
+    }
+    if ([money rangeOfString:@","].location != NSNotFound) {
+        return [NSString stringWithFormat:@"¥%@",money];
+    }
+    
+    money = [[self getNumberFormatter] stringFromNumber:[NSNumber numberWithDouble:doubleMoney]];
+    return money;
+}
+
+- (NSString *)money1 {
+    NSString *money = [NSString stringWithFormat:@"%@",self];
+    double doubleMoney = [money doubleValue];
+    if (self == nil || money.length == 0 || doubleMoney == 0) {
+        return @"0.00";
+    }
+    if ([money rangeOfString:@","].location != NSNotFound) {
+        return [NSString stringWithFormat:@"%@",money];
+    }
+    
+    money = [[self getNumberFormatter2] stringFromNumber:[NSNumber numberWithDouble:doubleMoney]];
+    return money;
+}
+
+- (NSNumberFormatter *)getNumberFormatter2 {
+    static NSNumberFormatter *formatter;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        formatter = [[NSNumberFormatter alloc] init];
+        formatter.numberStyle = NSNumberFormatterDecimalStyle;
+        [formatter setPositiveFormat:@"###,##0.00;"];
+    });
+    return formatter;
+}
+
+//返回价格样式
+- (NSString *)moneyPoint:(NSInteger)index {
+    NSString *money = [NSString stringWithFormat:@"%@",self];
+    if (index == 0) {
+        double doubleMoney = [money doubleValue];
+        if (self == nil || money.length == 0 || doubleMoney == 0) {
+            return @"¥0.00";
+        }
+        if ([money rangeOfString:@","].location != NSNotFound) {
+            return [NSString stringWithFormat:@"¥%@",money];
+        }
+        money = [[self getNumberFormatter] stringFromNumber:[NSNumber numberWithDouble:doubleMoney]];
+    }else if (index == 1) {
+        double doubleMoney = [money doubleValue];
+        if (self == nil || money.length == 0 || doubleMoney == 0) {
+            return @"0积分";
+        }
+        if ([money rangeOfString:@","].location != NSNotFound) {
+            return [NSString stringWithFormat:@"%@积分",money];
+        }
+        money = [[self getNumberFormatter1] stringFromNumber:[NSNumber numberWithDouble:doubleMoney]];
+    }
+    return money;
+}
+
+- (NSNumberFormatter *)getNumberFormatter1 {
+    static NSNumberFormatter *formatter;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        formatter = [[NSNumberFormatter alloc] init];
+        formatter.numberStyle = NSNumberFormatterDecimalStyle;
+        [formatter setPositiveFormat:@"###,##0积分;"];
+    });
+    return formatter;
+}
+
+//1:等待付款 2:待发货 3:部分商品已发货 4:已发货 5:已收货 6:已取消 7:待提货 8:已提货
+- (NSArray *)getStatusArray {
+    NSArray *array;
+    if ([self isEqualToString:@"1"]) {
+        array = @[@"取消订单", @"去支付"];
+    }else if ([self isEqualToString:@"2"]) {
+
+    }else if ([self isEqualToString:@"3"]) {
+        
+    }else if ([self isEqualToString:@"4"]) {
+        array = @[@"确认收货"];
+    }else if ([self isEqualToString:@"5"]) {
+        array = @[@"删除订单"];
+    }else if ([self isEqualToString:@"6"]) {
+        array = @[@"删除订单"];
+    }else if ([self isEqualToString:@"7"]) {
+        
+    }else if ([self isEqualToString:@"8"]) {
+        array = @[@"确认收货"];
+    }
+    return array;
+}
+
+//状态对应的字体颜色
+- (UIColor *)getStatusColor {
+    UIColor *color;
+    if ([self isEqualToString:@"1"]) {
+        color = ColorD0011B;
+    }else if ([self isEqualToString:@"2"]) {
+        color = [UIColor colorFromHexCode:@"#F6A623"];
+    }else if ([self isEqualToString:@"3"]) {
+        color = [UIColor colorFromHexCode:@"#F6A623"];
+    }else if ([self isEqualToString:@"4"]) {
+        color = App_Main_Color;
+    }else if ([self isEqualToString:@"5"]) {
+        color = Color3D4E56;
+    }else if ([self isEqualToString:@"6"]) {
+        color = Color3D4E56;
+    }else if ([self isEqualToString:@"7"]) {
+        color = App_Main_Color;
+    }else if ([self isEqualToString:@"8"]) {
+        color = App_Main_Color;
+    }
+    return color;
+}
+
+//返回倒计时
+- (NSString *)countDownStr {
+    NSString *str = @"0秒";
+    if ([self isBlankString]) {
+        NSString *stampStr=[NSString stringWithFormat:@"%f",[[NSDate date] timeIntervalSince1970]];
+        int  time = [self doubleValue];
+        int  timeStr = time - [stampStr doubleValue];
+        if (timeStr > 0) {
+            if (timeStr < 3600) {
+                str = [NSString stringWithFormat:@"%d分钟%d秒", timeStr / 60, timeStr % 60];
+            }else if (timeStr > 3600 && timeStr < 86400) {
+                str = [NSString stringWithFormat:@"%d小时%d分钟%d秒", timeStr / 3600, (timeStr % 3600) / 60, timeStr % 60];
+            }else if (timeStr > 86400) {
+                str = [NSString stringWithFormat:@"%d天%d小时%d分钟%d秒", timeStr / 86400,(timeStr % 86400) / 3600, (timeStr % 3600) / 60, timeStr % 60];
+            }
+        }
+    }
+    
+    return str;
+}
+
+//时间戳转化成@"YYYY-MM-dd"时间格式
+- (NSString *)timeTypeMonthDayStr {
+    if ([self isKindOfClass:[NSString class]] && self.length != 0) {
+        NSDate *date=[NSDate dateWithTimeIntervalSince1970:[self doubleValue]];
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"YYYY-MM-dd"];
+        NSString *dateString = [formatter stringFromDate:date];
+        return dateString;
+    }
+    return nil;
+}
+
+//时间戳转化成@"HH:mm"时间格式
+- (NSString *)timeTypeHourStr {
+    if (self.length == 0) {
+        return nil;
+    }
+    NSDate *date=[NSDate dateWithTimeIntervalSince1970:[self doubleValue]];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"HH:mm"];
+    NSString *dateString = [formatter stringFromDate:date];
+    return dateString;
+}
+
+@end
